@@ -175,10 +175,10 @@ body::before{
 .marker.active .ring{border-color:var(--gold-2);}
 @keyframes pulse{0%{transform:scale(.6);opacity:.9;}70%{transform:scale(1.9);opacity:0;}100%{opacity:0;}}
 
-.fs-overlay{position:fixed;inset:0;background:#000;z-index:100;display:flex;flex-direction:column;}
+.fs-overlay{position:fixed;inset:0;background:#000;z-index:100;display:flex;flex-direction:column;overflow-y:auto;}
 .fs-overlay .fs-top{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;background:#0e0e12;border-bottom:1px solid var(--line);}
 .fs-overlay .fs-close{font-size:13px;padding:8px 16px;border-radius:20px;border:1px solid var(--line);background:transparent;color:var(--text,#eee);cursor:pointer;}
-.fs-overlay .img-canvas{flex:1;padding:24px;}
+.fs-overlay .img-canvas{padding:24px;}
 .fs-overlay .img-wrap img{max-height:88vh;}
 
 .dock-desc{margin:0;padding:16px 18px;background:var(--m-bg, var(--panel-2));border-top:1px solid var(--line);border-inline-start:4px solid var(--m-color, var(--gold-2));animation:ddIn .15s ease-out;}
@@ -225,8 +225,8 @@ body::before{
 .compare-col .img-wrap img{width:100%;height:100%;object-fit:contain;display:block;}
 .compare-col .img-wrap.empty{color:var(--muted);font-size:12px;text-align:center;padding:16px;background:var(--panel-2);}
 @media (max-width:640px){.compare-col .img-wrap{aspect-ratio:4/3;}}
-.fs-overlay .compare-col .img-wrap{aspect-ratio:auto;height:78vh;}
-@media (max-width:760px){.fs-overlay .compare-col .img-wrap{height:38vh;}}
+.fs-overlay .compare-col .img-wrap{aspect-ratio:auto;height:62vh;}
+@media (max-width:760px){.fs-overlay .compare-col .img-wrap{height:34vh;}}
 
 .source-line{font-size:11.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px;margin-top:8px;}
 .source-line b{color:var(--text);}
@@ -584,13 +584,34 @@ function buildStage(c){
   stage.appendChild(toolbar);
 
   const canvas = el("div",{class:"img-canvas"});
+  const activeF = c.findings.find(f=>f.id===state.activeFinding);
+
+  function buildDockDesc(f){
+    return el("div",{
+      class:"dock-desc",
+      style:`--m-color:${typeColorHex(f.type)}; --m-bg:${typeColorHex(f.type)}22;`
+    },[
+      el("div",{class:"dd-top"},[
+        el("span",{class:"dd-title"},[document.createTextNode(f.title||"—")]),
+        el("span",{class:"dd-type"},[document.createTextNode(typeLabel(f.type))]),
+        el("button",{class:"dd-close", onclick:()=>{state.activeFinding=null; render();}},[document.createTextNode("✕")])
+      ]),
+      el("div",{class:"dd-desc"},[document.createTextNode(f.desc||"")])
+    ]);
+  }
 
   if(hasCompare){
     // نمایش هم‌زمان و کنار هم تصویر بیمار و تصویر طبیعی برای دسترسی و مقایسهٔ راحت‌تر
     const row = el("div",{class:"compare-row"});
-    row.appendChild(buildCompareCol(c, "patient", c.imageUrl, "تصویر بیمار", "یافته‌ها فعال"));
-    row.appendChild(buildCompareCol(c, "normal", c.compareImageUrl, "تصویر طبیعی", "برای مقایسه"));
+    row.appendChild(buildCompareCol(c, "patient", c.imageUrl, "تصویر بیمار", "یافته‌ها فعال", activeF?buildDockDesc(activeF):null));
+    row.appendChild(buildCompareCol(c, "normal", c.compareImageUrl, "تصویر طبیعی", "برای مقایسه", null));
     canvas.appendChild(row);
+    stage.appendChild(canvas);
+    if(!activeF){
+      stage.appendChild(el("div",{class:"img-hint"},[document.createTextNode(
+        "روی نقاط طلایی روی تصویر بیمار ضربه بزنید تا توضیح علمی هر یافته را دقیقاً زیر همان تصویر ببینید — تصویر طبیعی صرفاً برای مقایسه در کنار آن نمایش داده شده است."
+      )]));
+    }
   } else {
     let imgWrap;
     if(c.imageUrl){
@@ -601,32 +622,18 @@ function buildStage(c){
       imgWrap = el("div",{class:"img-wrap empty"},[document.createTextNode("تصویری ثبت نشده است")]);
     }
     canvas.appendChild(imgWrap);
-  }
-  stage.appendChild(canvas);
-
-  const activeF = c.findings.find(f=>f.id===state.activeFinding);
-  if(activeF){
-    stage.appendChild(el("div",{
-      class:"dock-desc",
-      style:`--m-color:${typeColorHex(activeF.type)}; --m-bg:${typeColorHex(activeF.type)}22;`
-    },[
-      el("div",{class:"dd-top"},[
-        el("span",{class:"dd-title"},[document.createTextNode(activeF.title||"—")]),
-        el("span",{class:"dd-type"},[document.createTextNode(typeLabel(activeF.type))]),
-        el("button",{class:"dd-close", onclick:()=>{state.activeFinding=null; render();}},[document.createTextNode("✕")])
-      ]),
-      el("div",{class:"dd-desc"},[document.createTextNode(activeF.desc||"")])
-    ]));
-  } else {
-    stage.appendChild(el("div",{class:"img-hint"},[document.createTextNode(
-      hasCompare
-        ? "روی نقاط طلایی روی تصویر بیمار ضربه بزنید تا توضیح علمی هر یافته را ببینید — تصویر طبیعی صرفاً برای مقایسه در کنار آن نمایش داده شده است."
-        : "برای مشاهده توضیح علمی هر یافته، روی نقاط طلایی روی تصویر ضربه بزنید."
-    )]));
+    stage.appendChild(canvas);
+    if(activeF){
+      stage.appendChild(buildDockDesc(activeF));
+    } else {
+      stage.appendChild(el("div",{class:"img-hint"},[document.createTextNode(
+        "برای مشاهده توضیح علمی هر یافته، روی نقاط طلایی روی تصویر ضربه بزنید."
+      )]));
+    }
   }
   return stage;
 }
-function buildCompareCol(c, kind, srcUrl, label, subLabel){
+function buildCompareCol(c, kind, srcUrl, label, subLabel, footer){
   const col = el("div",{class:"compare-col "+kind});
   col.appendChild(el("div",{class:"lbl"},[
     el("span",{class:"dot"}),
@@ -646,6 +653,7 @@ function buildCompareCol(c, kind, srcUrl, label, subLabel){
     )]);
   }
   col.appendChild(imgWrap);
+  if(footer) col.appendChild(footer);
   return col;
 }
 function renderFullscreen(){
