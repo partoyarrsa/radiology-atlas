@@ -923,9 +923,7 @@ async function deleteCase(c){
 }
 
 /* ---------- export sheets (Instagram post / story) ---------- */
-async function toDataURL(url){
-  if(!url) return null;
-  if(url.startsWith("data:")) return url;
+async function fetchAsDataURL(url){
   try{
     const res = await fetch(url, {mode:"cors"});
     if(!res.ok) throw new Error("bad status");
@@ -937,6 +935,17 @@ async function toDataURL(url){
       reader.readAsDataURL(blob);
     });
   }catch(e){ return null; }
+}
+async function toDataURL(url){
+  if(!url) return null;
+  if(url.startsWith("data:")) return url;
+  const direct = await fetchAsDataURL(url);
+  if(direct) return direct;
+  // بسیاری از سرورهای تصویر مجوز CORS لازم برای ساخت خروجی را نمی‌دهند، هرچند خودِ تصویر
+  // به‌صورت عادی در سایت درست نمایش داده می‌شود. در این حالت از یک پروکسی تصویر عمومی
+  // برای دریافت نسخه‌ای با مجوز صحیح استفاده می‌کنیم تا خروجی همچنان ساخته شود.
+  const proxied = "https://images.weserv.nl/?url=" + encodeURIComponent(url.replace(/^https?:\/\//,""));
+  return await fetchAsDataURL(proxied);
 }
 async function downloadSheet(c, variant){
   if(typeof html2canvas === "undefined"){ toast("ابزار خروجی تصویر بارگذاری نشد؛ اتصال اینترنت را بررسی کنید"); return; }
@@ -972,7 +981,7 @@ async function downloadSheet(c, variant){
   const imgWrap = el("div",{class:"x-img-wrap", style:`height:${imgH}px;margin-bottom:22px;`});
   const safeImgSrc = await toDataURL(c.imageUrl);
   if(!safeImgSrc){
-    toast("بارگذاری تصویر برای خروجی ناموفق بود — اتصال اینترنت یا لینک تصویر را بررسی کنید");
+    toast("بارگذاری تصویر برای خروجی ناموفق بود — لینک تصویر این مورد را با یک لینک مستقیم از منبع دیگر (مثلاً ویکی‌مدیا) جایگزین کنید");
     return;
   }
   const img = el("img",{src:safeImgSrc, style:`height:${imgH}px;width:100%;object-fit:cover;`});
