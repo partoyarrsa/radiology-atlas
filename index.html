@@ -137,6 +137,12 @@ body::before{
   display:inline-block;margin-top:8px;background:var(--gold-dim);color:var(--gold);
   font-size:11px;padding:3px 10px;border-radius:20px;font-family:'IBM Plex Mono',monospace;
 }
+.badge-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
+.diff-badge{
+  display:inline-block;font-size:11px;padding:3px 10px;border-radius:20px;font-family:'IBM Plex Mono',monospace;
+  background:var(--d-bg,var(--gold-dim));color:var(--d-color,var(--gold));
+}
+.case-num{font-size:10.5px;color:var(--muted);font-family:'IBM Plex Mono',monospace;}
 .s-detail-actions{display:flex;gap:8px;flex-wrap:wrap;}
 
 .sections-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:22px;}
@@ -146,27 +152,46 @@ body::before{
 .sec-card .sec-body{font-size:13.5px;line-height:1.9;color:var(--text);}
 .sec-card .sec-body.empty{color:var(--muted);font-style:normal;}
 
-.quiz-bar{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
-.quiz-bar .badge{font-size:11.5px;color:var(--muted);}
 
 .img-stage{
-  display:grid;grid-template-columns:1fr 300px;gap:0;border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:20px;
+  border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:16px;
 }
-@media (max-width:760px){.img-stage{grid-template-columns:1fr;}}
-.img-canvas{padding:20px;display:flex;align-items:center;justify-content:center;background:#000;}
+.img-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;background:var(--panel-2);border-bottom:1px solid var(--line);}
+.fs-btn{font-size:12.5px;padding:6px 14px;border-radius:20px;border:1px solid var(--line);background:transparent;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:6px;}
+.fs-btn:hover{border-color:var(--gold);color:var(--text,#eee);}
+.img-canvas{padding:16px;display:flex;align-items:center;justify-content:center;background:#000;}
 .img-wrap{position:relative;max-width:100%;line-height:0;}
-.img-wrap img{display:block;max-width:100%;max-height:60vh;}
+.img-wrap img{display:block;max-width:100%;max-height:80vh;width:100%;object-fit:contain;}
 .img-wrap.empty{
   width:100%;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;
   color:var(--muted);font-size:13px;background:var(--panel-2);border-radius:8px;
 }
-.marker{position:absolute;transform:translate(-50%,-50%);width:26px;height:26px;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+.img-hint{padding:10px 14px;font-size:12px;color:var(--muted);text-align:center;background:var(--panel-2);border-top:1px solid var(--line);}
+.marker{position:absolute;transform:translate(-50%,-50%);width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;}
 .marker .ring{position:absolute;inset:0;border-radius:50%;border:1.5px solid var(--m-color, var(--gold));animation:pulse 2.4s ease-out infinite;}
 @media (prefers-reduced-motion:reduce){.marker .ring{animation:none;}}
-.marker .core{width:9px;height:9px;border-radius:50%;background:var(--m-color, var(--gold));box-shadow:0 0 10px var(--m-color, var(--gold));position:relative;z-index:2;}
+.marker .core{width:10px;height:10px;border-radius:50%;background:var(--m-color, var(--gold));box-shadow:0 0 10px var(--m-color, var(--gold));position:relative;z-index:2;}
 .marker.active .core{background:var(--gold-2);box-shadow:0 0 14px var(--gold-2);}
 .marker.active .ring{border-color:var(--gold-2);}
 @keyframes pulse{0%{transform:scale(.6);opacity:.9;}70%{transform:scale(1.9);opacity:0;}100%{opacity:0;}}
+
+.fs-overlay{position:fixed;inset:0;background:#000;z-index:100;display:flex;flex-direction:column;}
+.fs-overlay .fs-top{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;background:#0e0e12;border-bottom:1px solid var(--line);}
+.fs-overlay .fs-close{font-size:13px;padding:8px 16px;border-radius:20px;border:1px solid var(--line);background:transparent;color:var(--text,#eee);cursor:pointer;}
+.fs-overlay .img-canvas{flex:1;padding:24px;}
+.fs-overlay .img-wrap img{max-height:88vh;}
+
+.dock-desc{margin:0;padding:16px 18px;background:var(--m-bg, var(--panel-2));border-top:1px solid var(--line);border-inline-start:4px solid var(--m-color, var(--gold-2));animation:ddIn .15s ease-out;}
+@keyframes ddIn{from{opacity:0;transform:translateY(-4px);}to{opacity:1;}}
+.dock-desc .dd-top{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
+.dock-desc .dd-title{font-size:15px;font-weight:700;color:var(--m-color, var(--gold-2));flex:1;}
+.dock-desc .dd-type{font-size:11px;padding:2px 10px;border-radius:20px;background:var(--panel);color:var(--m-color);}
+.dock-desc .dd-close{cursor:pointer;color:var(--muted);font-size:16px;line-height:1;background:none;border:none;padding:2px 4px;}
+.dock-desc .dd-close:hover{color:var(--text,#eee);}
+.dock-desc .dd-desc{font-size:14px;line-height:1.8;color:var(--text,#eee);}
+@media (max-width:760px){.dock-desc{padding:13px 15px;} .dock-desc .dd-title{font-size:13.5px;} .dock-desc .dd-desc{font-size:13px;}}
+
+.findings-panel{display:none;}
 
 .findings-panel{border-inline-start:1px solid var(--line);padding:18px;display:flex;flex-direction:column;gap:10px;background:var(--bg-2);overflow-y:auto;max-height:60vh;}
 .findings-panel h4{margin:0;font-size:12px;color:var(--muted);font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.05em;}
@@ -179,15 +204,29 @@ body::before{
 .finding-card .fdesc{font-size:12px;color:var(--muted);line-height:1.7;}
 .finding-card .fdesc.collapsed{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
 .finding-card .type-tag{font-size:10px;font-family:'IBM Plex Mono',monospace;color:var(--m-color);}
-.quiz-blur .fdesc, .quiz-blur .type-tag{filter:blur(5px);user-select:none;}
-.quiz-blur .ftitle{filter:blur(4px);user-select:none;}
 .reveal-btn{margin-top:6px;}
 
-.compare-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
+.compare-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;width:100%;}
 @media (max-width:640px){.compare-row{grid-template-columns:1fr;}}
-.compare-col{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#000;}
-.compare-col .lbl{background:var(--panel);padding:8px 12px;font-size:11.5px;color:var(--gold);font-family:'IBM Plex Mono',monospace;}
-.compare-col img{width:100%;display:block;}
+.compare-col{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#000;position:relative;transition:.15s;}
+.compare-col.patient{border-color:var(--line);}
+.compare-col.normal{border-color:#2c4f86;}
+.compare-col .lbl{
+  display:flex;align-items:center;gap:8px;background:var(--panel);padding:9px 13px;
+  font-size:12px;font-family:'IBM Plex Mono',monospace;letter-spacing:.02em;
+}
+.compare-col .lbl .dot{width:8px;height:8px;border-radius:50%;flex:none;box-shadow:0 0 8px currentColor;}
+.compare-col.patient .lbl{color:var(--patho);}
+.compare-col.patient .lbl .dot{background:var(--patho);color:var(--patho);}
+.compare-col.normal .lbl{color:var(--normal);}
+.compare-col.normal .lbl .dot{background:var(--normal);color:var(--normal);}
+.compare-col .lbl .lbl-sub{color:var(--muted);font-size:10.5px;margin-inline-start:auto;}
+.compare-col .img-wrap{position:relative;line-height:0;aspect-ratio:3/4;background:#000;display:flex;align-items:center;justify-content:center;}
+.compare-col .img-wrap img{width:100%;height:100%;object-fit:contain;display:block;}
+.compare-col .img-wrap.empty{color:var(--muted);font-size:12px;text-align:center;padding:16px;background:var(--panel-2);}
+@media (max-width:640px){.compare-col .img-wrap{aspect-ratio:4/3;}}
+.fs-overlay .compare-col .img-wrap{aspect-ratio:auto;height:78vh;}
+@media (max-width:760px){.fs-overlay .compare-col .img-wrap{height:38vh;}}
 
 .source-line{font-size:11.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px;margin-top:8px;}
 .source-line b{color:var(--text);}
@@ -277,6 +316,12 @@ body::before{
 .xsheet .x-sec{background:#ffffff0d;border:1px solid #ffffff1a;border-radius:16px;}
 .xsheet .x-sec .x-sec-label{color:#ffcf4d;font-family:'IBM Plex Mono',monospace;font-weight:700;text-transform:uppercase;}
 .xsheet .x-sec .x-sec-body{color:#dbe6f7;line-height:1.65;}
+.xsheet .x-legend{display:flex;flex-direction:column;position:relative;z-index:1;}
+.xsheet .x-leg-item{display:flex;align-items:flex-start;}
+.xsheet .x-leg-num{flex:0 0 auto;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-weight:800;color:#0e2038;}
+.xsheet .x-leg-body{flex:1;}
+.xsheet .x-leg-title{color:#ffcf4d;font-weight:700;}
+.xsheet .x-leg-desc{color:#c7d4ea;line-height:1.6;}
 .xsheet .x-footer{margin-top:auto;position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center;border-top:1px solid #ffffff22;color:#9fb2d4;font-family:'IBM Plex Mono',monospace;}
 </style>
 </head>
@@ -344,7 +389,8 @@ const STORAGE_KEY = "radio-atlas-cases-v2";
 let state = {
   cases: [], activeId: null, screen:"student",
   admMode:"edit", activeFinding:null, placing:false,
-  search:"", category:"all", quiz:false
+  search:"", category:"all",
+  fullscreen:false
 };
 
 const el = (tag, attrs={}, children=[]) => {
@@ -371,6 +417,15 @@ function typeColor(type){ return type==="normal" ? "var(--normal)" : "var(--path
 function typeColorHex(type){ return type==="normal" ? "#49e0b3" : "#ff8066"; }
 function typeLabel(type){ return type==="normal" ? "طبیعی" : "پاتولوژیک"; }
 
+/* Anatomic categories — based on standard radiology subspecialty divisions
+   (Chest/Thoracic, Abdominal, MSK, Neuro, Head&Neck, Cardiovascular, Breast,
+   Pediatric, Emergency) as used by ACR/Radiopaedia and major academic centers. */
+const CATEGORIES = ["قفسه سینه","شکم و لگن","اسکلتی-عضلانی","مغز و اعصاب","سر و گردن","قلب و عروق","پستان","کودکان","اورژانس و تروما"];
+const DIFFICULTIES = [{v:"beginner",label:"مقدماتی"},{v:"intermediate",label:"متوسط"},{v:"advanced",label:"پیشرفته"}];
+function difficultyLabel(d){ const f=DIFFICULTIES.find(x=>x.v===d); return f? f.label : "مقدماتی"; }
+function difficultyColorHex(d){ return {beginner:"#49e0b3",intermediate:"#ffcf4d",advanced:"#ff8066"}[d] || "#49e0b3"; }
+function caseNumber(c){ const idx = state.cases.findIndex(x=>x.id===c.id); return String(idx+1).padStart(2,"0"); }
+
 async function load(){
   try{
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -391,9 +446,9 @@ function seedData(){
     title: "پنومونی لوبار (Lobar Pneumonia)",
     subtitle: "رادیوگرافی قدامی-خلفی قفسه سینه — درگیری لوب میانی راست",
     category: "قفسه سینه",
-    source: "Mikael Häggström, Wikimedia Commons (مجوز CC0 / Public Domain) — الگوی تصویری منطبق بر منابع مرجع رادیولوژی (Radiopaedia, Brant & Helms)",
+    source: "تصویر بیمار: Mikael Häggström؛ تصویر طبیعی: Wikimedia Commons — هر دو با مجوز CC0 / Public Domain — الگوی تصویری منطبق بر منابع مرجع رادیولوژی (Radiopaedia, Brant & Helms)",
     imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/X-ray_of_lobar_pneumonia.jpg",
-    compareImageUrl: "",
+    compareImageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Chest_Xray_PA_3-8-2010.png",
     sections:{
       definition:"التهاب بافت پارانشیم ریه، معمولاً ناشی از عفونت باکتریایی، ویروسی یا قارچی که منجر به پر شدن فضاهای هوایی آلوئولی از ترشحات می‌شود. در نوع لوبار، کل یک لوب ریه به‌طور یکنواخت درگیر می‌شود.",
       causes:"شایع‌ترین علت باکتریایی: استرپتوکوک پنومونیه (پنوموکوک). علل دیگر: هموفیلوس آنفلوانزا، آسپیراسیون، ویروس‌ها، عفونت بیمارستانی و ضعف سیستم ایمنی.",
@@ -418,6 +473,7 @@ function render(){
   document.getElementById("studentScreen").classList.toggle("hidden", state.screen!=="student");
   document.getElementById("adminScreen").classList.toggle("hidden", state.screen!=="admin");
   if(state.screen==="student") renderStudent(); else renderAdmin();
+  renderFullscreen();
 }
 
 /* ============ STUDENT RENDER ============ */
@@ -462,11 +518,14 @@ function renderStudentList(){
     const thumb = c.imageUrl
       ? el("div",{class:"thumb", style:`background-image:url('${c.imageUrl.replace(/'/g,"")}')`})
       : el("div",{class:"thumb empty"},[document.createTextNode("بدون تصویر")]);
-    const card = el("div",{class:"s-card"+(c.id===state.activeId?" active":""), onclick:()=>{state.activeId=c.id; state.activeFinding=null; state.quiz=false; render();}},[
+    const card = el("div",{class:"s-card"+(c.id===state.activeId?" active":""), onclick:()=>{state.activeId=c.id; state.activeFinding=null; render();}},[
       thumb,
       el("div",{class:"meta"},[
-        c.category ? el("div",{class:"cat"},[document.createTextNode(c.category)]) : null,
-        el("div",{class:"ttl"},[document.createTextNode(c.title||"بدون عنوان")])
+        el("div",{class:"cat"},[document.createTextNode("کیس "+caseNumber(c)+(c.category?" · "+c.category:""))]),
+        el("div",{class:"ttl"},[document.createTextNode(c.title||"بدون عنوان")]),
+        el("div",{class:"badge-row"},[
+          el("span",{class:"diff-badge", style:`--d-color:${difficultyColorHex(c.difficulty)}; --d-bg:${difficultyColorHex(c.difficulty)}22;`},[document.createTextNode(difficultyLabel(c.difficulty))])
+        ])
       ])
     ]);
     list.appendChild(card);
@@ -488,11 +547,10 @@ function renderStudentDetail(){
     el("div",{class:"s-detail-title"},[
       el("h2",{},[document.createTextNode(c.title)]),
       c.subtitle ? el("div",{class:"sub"},[document.createTextNode(c.subtitle)]) : null,
-      c.category ? el("div",{class:"cat-badge"},[document.createTextNode(c.category)]) : null
-    ]),
-    el("div",{class:"s-detail-actions"},[
-      el("button",{class:"btn small", onclick:()=>downloadSheet(c,"post")},[document.createTextNode("⬇ خروجی پست")]),
-      el("button",{class:"btn small", onclick:()=>downloadSheet(c,"story")},[document.createTextNode("⬇ خروجی استوری")])
+      el("div",{class:"badge-row"},[
+        el("span",{class:"cat-badge"},[document.createTextNode("کیس "+caseNumber(c)+(c.category?" · "+c.category:""))]),
+        el("span",{class:"diff-badge", style:`--d-color:${difficultyColorHex(c.difficulty)}; --d-bg:${difficultyColorHex(c.difficulty)}22;`},[document.createTextNode(difficultyLabel(c.difficulty))])
+      ])
     ])
   ]));
 
@@ -506,66 +564,106 @@ function renderStudentDetail(){
   });
   detail.appendChild(secGrid);
 
-  detail.appendChild(el("div",{class:"quiz-bar"},[
-    el("button",{class:"btn small"+(state.quiz?" primary":""), onclick:()=>{state.quiz=!state.quiz; state.activeFinding=null; render();}},[document.createTextNode(state.quiz?"خروج از حالت خودآزمایی":"🧠 حالت خودآزمایی")]),
-    el("span",{class:"badge"},[document.createTextNode(state.quiz? "روی هر یافته کلیک کنید و قبل از دیدن جواب حدس بزنید" : "")])
-  ]));
-
-  const stage = el("div",{class:"img-stage"});
-  const canvas = el("div",{class:"img-canvas"});
-  let imgWrap;
-  if(c.imageUrl){
-    imgWrap = el("div",{class:"img-wrap"});
-    const img = el("img",{src:c.imageUrl, alt:c.title});
-    imgWrap.appendChild(img);
-    c.findings.forEach((f,idx)=> imgWrap.appendChild(buildStudentMarker(c,f,idx)));
-  } else {
-    imgWrap = el("div",{class:"img-wrap empty"},[document.createTextNode("تصویری ثبت نشده است")]);
-  }
-  canvas.appendChild(imgWrap);
-  stage.appendChild(canvas);
-
-  const fp = el("div",{class:"findings-panel"});
-  fp.appendChild(el("h4",{},[document.createTextNode("یافته‌ها")]));
-  if(!c.findings.length) fp.appendChild(el("div",{class:"hint-banner"},[document.createTextNode("یافته‌ای ثبت نشده.")]));
-  c.findings.forEach((f,idx)=>{
-    const isActive = state.activeFinding===f.id;
-    const blur = state.quiz && !isActive;
-    const card = el("div",{
-      class:"finding-card"+(isActive?" active":"")+(blur?" quiz-blur":""),
-      style:`--m-color:${typeColorHex(f.type)}; --m-bg:${typeColorHex(f.type)}22;`,
-      onclick:()=>{ state.activeFinding = isActive? null : f.id; render(); }
-    },[
-      el("div",{class:"fc-top"},[
-        el("span",{class:"num"},[document.createTextNode(String(idx+1).padStart(2,"0"))]),
-        el("span",{class:"ftitle"},[document.createTextNode(f.title||"—")])
-      ]),
-      el("div",{class:"type-tag"},[document.createTextNode(typeLabel(f.type))]),
-      el("div",{class:"fdesc"+(isActive?"":" collapsed")},[document.createTextNode(f.desc||"")])
-    ]);
-    fp.appendChild(card);
-  });
-  stage.appendChild(fp);
-  detail.appendChild(stage);
-
-  if(c.compareImageUrl){
-    detail.appendChild(el("div",{class:"compare-row"},[
-      el("div",{class:"compare-col"},[
-        el("div",{class:"lbl"},[document.createTextNode("تصویر بیمار")]),
-        el("img",{src:c.imageUrl||""})
-      ]),
-      el("div",{class:"compare-col"},[
-        el("div",{class:"lbl"},[document.createTextNode("تصویر طبیعی برای مقایسه")]),
-        el("img",{src:c.compareImageUrl})
-      ])
-    ]));
-  }
+  detail.appendChild(buildStage(c));
 
   if(c.source){
     detail.appendChild(el("div",{class:"source-line"},[document.createTextNode("منبع علمی: "), el("b",{},[document.createTextNode(c.source)])]));
   }
 
   box.appendChild(detail);
+}
+function buildStage(c){
+  const stage = el("div",{class:"img-stage"});
+  const hasCompare = !!c.compareImageUrl;
+
+  const toolbar = el("div",{class:"img-toolbar"});
+  toolbar.appendChild(el("span",{style:"font-size:12px;color:var(--muted);"},[document.createTextNode(
+    hasCompare ? "🔍 مقایسهٔ تصویر بیمار و تصویر طبیعی" : "تصویر رادیولوژیک"
+  )]));
+  toolbar.appendChild(el("button",{class:"fs-btn", onclick:()=>{state.fullscreen=true; render();}},[document.createTextNode("⤢ نمایش تمام‌صفحه")]));
+  stage.appendChild(toolbar);
+
+  const canvas = el("div",{class:"img-canvas"});
+
+  if(hasCompare){
+    // نمایش هم‌زمان و کنار هم تصویر بیمار و تصویر طبیعی برای دسترسی و مقایسهٔ راحت‌تر
+    const row = el("div",{class:"compare-row"});
+    row.appendChild(buildCompareCol(c, "patient", c.imageUrl, "تصویر بیمار", "یافته‌ها فعال"));
+    row.appendChild(buildCompareCol(c, "normal", c.compareImageUrl, "تصویر طبیعی", "برای مقایسه"));
+    canvas.appendChild(row);
+  } else {
+    let imgWrap;
+    if(c.imageUrl){
+      imgWrap = el("div",{class:"img-wrap"});
+      imgWrap.appendChild(el("img",{src:c.imageUrl, alt:c.title}));
+      c.findings.forEach((f,idx)=> imgWrap.appendChild(buildStudentMarker(c,f,idx)));
+    } else {
+      imgWrap = el("div",{class:"img-wrap empty"},[document.createTextNode("تصویری ثبت نشده است")]);
+    }
+    canvas.appendChild(imgWrap);
+  }
+  stage.appendChild(canvas);
+
+  const activeF = c.findings.find(f=>f.id===state.activeFinding);
+  if(activeF){
+    stage.appendChild(el("div",{
+      class:"dock-desc",
+      style:`--m-color:${typeColorHex(activeF.type)}; --m-bg:${typeColorHex(activeF.type)}22;`
+    },[
+      el("div",{class:"dd-top"},[
+        el("span",{class:"dd-title"},[document.createTextNode(activeF.title||"—")]),
+        el("span",{class:"dd-type"},[document.createTextNode(typeLabel(activeF.type))]),
+        el("button",{class:"dd-close", onclick:()=>{state.activeFinding=null; render();}},[document.createTextNode("✕")])
+      ]),
+      el("div",{class:"dd-desc"},[document.createTextNode(activeF.desc||"")])
+    ]));
+  } else {
+    stage.appendChild(el("div",{class:"img-hint"},[document.createTextNode(
+      hasCompare
+        ? "روی نقاط طلایی روی تصویر بیمار ضربه بزنید تا توضیح علمی هر یافته را ببینید — تصویر طبیعی صرفاً برای مقایسه در کنار آن نمایش داده شده است."
+        : "برای مشاهده توضیح علمی هر یافته، روی نقاط طلایی روی تصویر ضربه بزنید."
+    )]));
+  }
+  return stage;
+}
+function buildCompareCol(c, kind, srcUrl, label, subLabel){
+  const col = el("div",{class:"compare-col "+kind});
+  col.appendChild(el("div",{class:"lbl"},[
+    el("span",{class:"dot"}),
+    el("span",{},[document.createTextNode(label)]),
+    el("span",{class:"lbl-sub"},[document.createTextNode(subLabel)])
+  ]));
+  let imgWrap;
+  if(srcUrl){
+    imgWrap = el("div",{class:"img-wrap"});
+    imgWrap.appendChild(el("img",{src:srcUrl, alt:label}));
+    if(kind==="patient"){
+      c.findings.forEach((f,idx)=> imgWrap.appendChild(buildStudentMarker(c,f,idx)));
+    }
+  } else {
+    imgWrap = el("div",{class:"img-wrap empty"},[document.createTextNode(
+      kind==="patient" ? "تصویری ثبت نشده است" : "تصویر طبیعی برای این مورد ثبت نشده است"
+    )]);
+  }
+  col.appendChild(imgWrap);
+  return col;
+}
+function renderFullscreen(){
+  let overlay = document.getElementById("fsOverlay");
+  if(!state.fullscreen || state.screen!=="student"){ if(overlay) overlay.remove(); return; }
+  const c = activeCase();
+  if(!c){ state.fullscreen=false; return; }
+  if(!overlay){
+    overlay = el("div",{id:"fsOverlay", class:"fs-overlay"});
+    document.body.appendChild(overlay);
+  }
+  overlay.innerHTML="";
+  overlay.appendChild(el("div",{class:"fs-top"},[
+    el("div",{style:"font-size:13.5px;font-weight:700;"},[document.createTextNode(c.title)]),
+    el("button",{class:"fs-close", onclick:()=>{state.fullscreen=false; render();}},[document.createTextNode("بستن ✕")])
+  ]));
+  const stage = buildStage(c);
+  overlay.appendChild(stage);
 }
 function buildStudentMarker(c,f,idx){
   const isActive = state.activeFinding===f.id;
@@ -597,6 +695,7 @@ function renderAdminSidebar(){
       onclick:()=>{state.activeId=c.id; state.activeFinding=null; render();}
     },[
       el("span",{class:"dot"}),
+      el("span",{class:"case-num"},[document.createTextNode(caseNumber(c))]),
       el("span",{class:"name"},[document.createTextNode(c.title||"بدون عنوان")]),
       el("span",{class:"count mono"},[document.createTextNode(String(c.findings.length))])
     ]));
@@ -604,8 +703,8 @@ function renderAdminSidebar(){
 }
 function renderAdminHeader(){
   const c = activeCase();
-  document.getElementById("caseTitle").textContent = c? c.title : "موردی انتخاب نشده";
-  document.getElementById("caseSub").textContent = c? (c.subtitle||"") : "برای شروع یک مورد جدید بسازید";
+  document.getElementById("caseTitle").textContent = c? ("کیس "+caseNumber(c)+" — "+c.title) : "موردی انتخاب نشده";
+  document.getElementById("caseSub").textContent = c? [c.category, difficultyLabel(c.difficulty), c.subtitle].filter(Boolean).join(" · ") : "برای شروع یک مورد جدید بسازید";
   document.querySelectorAll(".mode-toggle button").forEach(b=>{
     b.classList.toggle("active", b.dataset.mode===state.admMode);
     b.onclick = ()=>{ state.admMode=b.dataset.mode; state.placing=false; render(); };
@@ -613,6 +712,8 @@ function renderAdminHeader(){
   const actions = document.getElementById("headerActions");
   actions.innerHTML="";
   if(c){
+    actions.appendChild(el("button",{class:"btn small", onclick:()=>downloadSheet(c,"post")},[document.createTextNode("⬇ خروجی پست")]));
+    actions.appendChild(el("button",{class:"btn small", onclick:()=>downloadSheet(c,"story")},[document.createTextNode("⬇ خروجی استوری")]));
     actions.appendChild(el("button",{class:"btn small", onclick:()=>openCaseModal(c)},[document.createTextNode("ویرایش مورد")]));
     actions.appendChild(el("button",{class:"btn small danger", onclick:()=>deleteCase(c)},[document.createTextNode("حذف")]));
   }
@@ -698,7 +799,12 @@ function openCaseModal(existing){
   const root = document.getElementById("modalRoot");
   const s = existing? (existing.sections||{}) : {};
   const titleInput = el("input",{value: existing?existing.title:"", placeholder:"مثلاً: پنومونی لوبار"});
-  const catInput = el("input",{value: existing?(existing.category||""):"", placeholder:"مثلاً: قفسه سینه"});
+  const catInput = el("select",{});
+  CATEGORIES.forEach(cat=> catInput.appendChild(el("option",{value:cat},[document.createTextNode(cat)])));
+  catInput.value = existing?(existing.category||CATEGORIES[0]):CATEGORIES[0];
+  const diffInput = el("select",{});
+  DIFFICULTIES.forEach(d=> diffInput.appendChild(el("option",{value:d.v},[document.createTextNode(d.label)])));
+  diffInput.value = existing?(existing.difficulty||"beginner"):"beginner";
   const subInput = el("input",{value: existing?(existing.subtitle||""):"", placeholder:"مثلاً: رادیوگرافی قدامی-خلفی قفسه سینه"});
   const srcInput = el("input",{value: existing?(existing.source||""):"", placeholder:"مثلاً: نام کتاب یا مقاله رفرنس"});
   const imgInput = el("input",{value: existing?(existing.imageUrl||""):"", placeholder:"https://... لینک تصویر بیمار"});
@@ -710,9 +816,10 @@ function openCaseModal(existing){
 
   const modal = el("div",{class:"modal"},[
     el("h3",{},[document.createTextNode(existing?"ویرایش مورد":"مورد جدید")]),
+    el("div",{class:"field"},[el("label",{},[document.createTextNode("عنوان بیماری")]), titleInput]),
     el("div",{class:"field-row"},[
-      el("div",{class:"field"},[el("label",{},[document.createTextNode("عنوان بیماری")]), titleInput]),
-      el("div",{class:"field"},[el("label",{},[document.createTextNode("دسته‌بندی (اندام)")]), catInput])
+      el("div",{class:"field"},[el("label",{},[document.createTextNode("دسته‌بندی (اندام)")]), catInput]),
+      el("div",{class:"field"},[el("label",{},[document.createTextNode("سطح دشواری")]), diffInput])
     ]),
     el("div",{class:"field"},[el("label",{},[document.createTextNode("زیرعنوان (نوع تصویر)")]), subInput]),
     el("div",{class:"field"},[el("label",{},[document.createTextNode("لینک تصویر بیمار")]), imgInput]),
@@ -729,7 +836,7 @@ function openCaseModal(existing){
         const title = titleInput.value.trim();
         if(!title){ toast("عنوان را وارد کنید"); return; }
         const payload = {
-          title, category:catInput.value.trim(), subtitle:subInput.value.trim(),
+          title, category:catInput.value, difficulty:diffInput.value, subtitle:subInput.value.trim(),
           source:srcInput.value.trim(), imageUrl:imgInput.value.trim(), compareImageUrl:cmpInput.value.trim(),
           sections:{definition:defInput.value.trim(), causes:causeInput.value.trim(), symptoms:sympInput.value.trim(), imaging:imgingInput.value.trim()}
         };
@@ -768,6 +875,7 @@ function openAdminGate(){
 
 function openFindingModal(c, existing, x, y){
   const root = document.getElementById("modalRoot");
+  const titleInput = el("input",{value: existing?existing.title:"", placeholder:"مثلاً: کدورت فضایی هوایی"});
   const descInput = el("textarea",{placeholder:"توضیح تشخیصی این یافته را بنویسید..."});
   descInput.value = existing? existing.desc:"";
   let chosenType = existing? (existing.type||"pathologic") : "pathologic";
@@ -806,6 +914,21 @@ async function deleteCase(c){
 }
 
 /* ---------- export sheets (Instagram post / story) ---------- */
+async function toDataURL(url){
+  if(!url) return null;
+  if(url.startsWith("data:")) return url;
+  try{
+    const res = await fetch(url, {mode:"cors"});
+    if(!res.ok) throw new Error("bad status");
+    const blob = await res.blob();
+    return await new Promise((resolve,reject)=>{
+      const reader = new FileReader();
+      reader.onload = ()=>resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  }catch(e){ return null; }
+}
 async function downloadSheet(c, variant){
   if(typeof html2canvas === "undefined"){ toast("ابزار خروجی تصویر بارگذاری نشد؛ اتصال اینترنت را بررسی کنید"); return; }
   if(!c.imageUrl){ toast("ابتدا یک تصویر برای این مورد ثبت کنید"); return; }
@@ -828,31 +951,57 @@ async function downloadSheet(c, variant){
         el("div",{style:"font-size:13px;color:#9fb2d4;font-family:'IBM Plex Mono',monospace;letter-spacing:.05em;"},[document.createTextNode("RADIATION SCIENCES ASSOCIATION")])
       ])
     ]),
-    c.category ? el("div",{class:"x-cat-pill", style:"padding:8px 18px;font-size:16px;"},[document.createTextNode(c.category)]) : null
+    el("div",{class:"x-cat-pill", style:"padding:8px 18px;font-size:16px;"},[document.createTextNode("کیس "+caseNumber(c)+(c.category?" · "+c.category:""))])
   ]));
 
   sheet.appendChild(el("div",{class:"x-title", style:"font-size:46px;margin-bottom:6px;"},[document.createTextNode(c.title)]));
   if(c.subtitle) sheet.appendChild(el("div",{class:"x-sub", style:"font-size:19px;margin-bottom:26px;"},[document.createTextNode(c.subtitle)]));
   else sheet.appendChild(el("div",{style:"height:20px;"}));
 
-  const imgH = variant==="story" ? 560 : 480;
-  const imgWrap = el("div",{class:"x-img-wrap", style:`height:${imgH}px;margin-bottom:28px;`});
-  const img = el("img",{src:c.imageUrl, crossorigin:"anonymous", style:`height:${imgH}px;width:100%;object-fit:cover;`});
+  const hasFindings = c.findings && c.findings.length>0;
+  const imgH = variant==="story" ? (hasFindings?440:560) : (hasFindings?340:480);
+  const imgWrap = el("div",{class:"x-img-wrap", style:`height:${imgH}px;margin-bottom:22px;`});
+  const safeImgSrc = await toDataURL(c.imageUrl);
+  if(!safeImgSrc){
+    toast("بارگذاری تصویر برای خروجی ناموفق بود — اتصال اینترنت یا لینک تصویر را بررسی کنید");
+    return;
+  }
+  const img = el("img",{src:safeImgSrc, style:`height:${imgH}px;width:100%;object-fit:cover;`});
   imgWrap.appendChild(img);
   await new Promise((resolve)=>{ if(img.complete && img.naturalWidth){resolve();} else {img.onload=resolve; img.onerror=resolve;} });
 
   c.findings.forEach((f,idx)=>{
     const color = typeColorHex(f.type);
-    imgWrap.appendChild(el("div",{class:"x-marker", style:`left:${f.x}%; top:${f.y}%; width:44px; height:44px;`},[
+    imgWrap.appendChild(el("div",{class:"x-marker", style:`left:${f.x}%; top:${f.y}%; width:40px; height:40px;`},[
       el("div",{class:"ring", style:`border:3px solid ${color};`}),
-      el("div",{class:"num", style:`width:44px;height:44px;background:${color};color:#0e2038;font-size:18px;`},[document.createTextNode(String(idx+1))])
+      el("div",{class:"num", style:`width:40px;height:40px;background:${color};color:#0e2038;font-size:17px;`},[document.createTextNode(String(idx+1))])
     ]));
   });
   sheet.appendChild(imgWrap);
 
+  if(hasFindings){
+    const maxItems = variant==="story" ? 5 : 3;
+    const descLen = variant==="story" ? 130 : 78;
+    const legend = el("div",{class:"x-legend", style:"gap:10px;margin-bottom:20px;"});
+    c.findings.slice(0,maxItems).forEach((f,idx)=>{
+      const color = typeColorHex(f.type);
+      legend.appendChild(el("div",{class:"x-leg-item", style:"gap:12px;"},[
+        el("div",{class:"x-leg-num", style:`width:30px;height:30px;font-size:14px;background:${color};`},[document.createTextNode(String(idx+1))]),
+        el("div",{class:"x-leg-body"},[
+          el("div",{class:"x-leg-title", style:"font-size:15px;margin-bottom:2px;"},[document.createTextNode(f.title||"—")]),
+          el("div",{class:"x-leg-desc", style:"font-size:13.5px;"},[document.createTextNode((f.desc||"").slice(0,descLen))])
+        ])
+      ]));
+    });
+    if(c.findings.length>maxItems){
+      legend.appendChild(el("div",{style:"font-size:12.5px;color:#8fa3c7;padding-inline-start:42px;"},[document.createTextNode(`+ ${c.findings.length-maxItems} یافته دیگر در نسخه آنلاین`)]));
+    }
+    sheet.appendChild(legend);
+  }
+
   const secs = c.sections||{};
   const secList = [["تعریف",secs.definition],["علل",secs.causes],["علائم",secs.symptoms],["اهمیت تصویربرداری",secs.imaging]].filter(([,b])=>b);
-  if(secList.length){
+  if(secList.length && !hasFindings){
     const cols = variant==="story" ? 1 : 2;
     const secGrid = el("div",{class:"x-sections", style:`grid-template-columns:repeat(${cols},1fr);gap:14px;margin-bottom:22px;`});
     const maxLen = variant==="story" ? 150 : 100;
