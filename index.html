@@ -575,7 +575,7 @@ function renderStudentDetail(){
 
   box.appendChild(detail);
 }
-function buildImgPanel(label, srcUrl, viewKey, showMarkers, c, emptyText){
+function buildImgPanel(label, srcUrl, viewKey, showMarkers, c, emptyText, extraContent){
   const panel = el("div",{class:"img-panel"});
   panel.appendChild(el("div",{class:"panel-head"},[
     el("span",{class:"panel-label"+(viewKey==="normal"?" is-normal":"")},[el("span",{class:"dot"}), document.createTextNode(label)]),
@@ -595,21 +595,18 @@ function buildImgPanel(label, srcUrl, viewKey, showMarkers, c, emptyText){
   }
   canvas.appendChild(imgWrap);
   panel.appendChild(canvas);
+  if(extraContent) panel.appendChild(extraContent);
   return panel;
 }
 function buildStage(c){
   const stage = el("div",{class:"img-stage"});
   const hasCompare = !!c.compareImageUrl;
   const row = el("div",{class:"stage-row"+(hasCompare?"":" single")});
-  row.appendChild(buildImgPanel("تصویر بیمار", c.imageUrl, "patient", true, c, "تصویری ثبت نشده است"));
-  if(hasCompare){
-    row.appendChild(buildImgPanel("تصویر طبیعی (مقایسه)", c.compareImageUrl, "normal", false, c, ""));
-  }
-  stage.appendChild(row);
 
   const activeF = c.findings.find(f=>f.id===state.activeFinding);
+  let patientExtra;
   if(activeF){
-    stage.appendChild(el("div",{
+    patientExtra = el("div",{
       class:"dock-desc",
       style:`--m-color:${typeColorHex(activeF.type)}; --m-bg:${typeColorHex(activeF.type)}22;`
     },[
@@ -619,13 +616,19 @@ function buildStage(c){
         el("button",{class:"dd-close", onclick:()=>{state.activeFinding=null; render();}},[document.createTextNode("✕")])
       ]),
       el("div",{class:"dd-desc"},[document.createTextNode(activeF.desc||"")])
-    ]));
+    ]);
   } else {
-    stage.appendChild(el("div",{class:"img-hint"},[document.createTextNode(
-      hasCompare ? "برای مشاهده توضیح علمی هر یافته روی نقاط طلایی تصویر بیمار ضربه بزنید — تصویر طبیعی کنارش برای مقایسه مستقیم قرار دارد. با ⤢ هر تصویر را بزرگ کنید."
+    patientExtra = el("div",{class:"img-hint"},[document.createTextNode(
+      hasCompare ? "برای مشاهده توضیح علمی هر یافته روی نقاط طلایی تصویر بیمار ضربه بزنید. با ⤢ هر تصویر را بزرگ کنید."
                  : "برای مشاهده توضیح علمی هر یافته، روی نقاط طلایی روی تصویر ضربه بزنید."
-    )]));
+    )]);
   }
+
+  row.appendChild(buildImgPanel("تصویر بیمار", c.imageUrl, "patient", true, c, "تصویری ثبت نشده است", patientExtra));
+  if(hasCompare){
+    row.appendChild(buildImgPanel("تصویر طبیعی (مقایسه)", c.compareImageUrl, "normal", false, c, ""));
+  }
+  stage.appendChild(row);
   return stage;
 }
 function renderFullscreen(){
@@ -1051,4 +1054,4 @@ load();
 })();
 </script>
 </body>
-</html>
+        </html>
