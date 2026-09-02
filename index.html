@@ -6,7 +6,7 @@
 <title>اطلس تعاملی رادیولوژی</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
 <style>
 :root{
   --bg:#0e2038;
@@ -442,6 +442,20 @@ const DIFFICULTIES = [{v:"beginner",label:"مقدماتی"},{v:"intermediate",la
 function difficultyLabel(d){ const f=DIFFICULTIES.find(x=>x.v===d); return f? f.label : "مقدماتی"; }
 function difficultyColorHex(d){ return {beginner:"#49e0b3",intermediate:"#ffcf4d",advanced:"#ff8066"}[d] || "#49e0b3"; }
 function caseNumber(c){ const idx = state.cases.findIndex(x=>x.id===c.id); return String(idx+1).padStart(2,"0"); }
+
+function showFatalError(err){
+  try{
+    document.querySelectorAll(".fatal-error-box").forEach(n=>n.remove());
+    const box = document.createElement("div");
+    box.className = "fatal-error-box";
+    box.setAttribute("style","position:fixed;inset:12px;z-index:9999;background:#2a0e0e;border:1px solid #ff8066;border-radius:12px;padding:16px;color:#ffe3da;font-family:monospace;font-size:12.5px;line-height:1.7;overflow:auto;direction:ltr;text-align:left;");
+    const msg = (err && (err.stack || err.message)) ? (err.stack || err.message) : String(err);
+    box.textContent = "خطای اجرا — این متن رو کپی/عکس بگیر و بفرست:\n\n" + msg;
+    document.body.appendChild(box);
+  }catch(e2){ /* nothing more we can do */ }
+}
+window.addEventListener("error", (e)=>{ showFatalError(e.error || e.message); });
+window.addEventListener("unhandledrejection", (e)=>{ showFatalError(e.reason); });
 
 async function load(){
   try{
@@ -1055,22 +1069,5 @@ async function downloadSheet(c, variant){
       el("div",{class:"num", style:`width:40px;height:40px;background:${color};color:#0e2038;font-size:17px;`},[document.createTextNode(String(idx+1))])
     ]));
   });
-  imgWrap.appendChild(imgBox);
-  sheet.appendChild(imgWrap);
-
-  if(hasFindings){
-    const maxItems = variant==="story" ? 5 : 3;
-    const descLen = variant==="story" ? 130 : 78;
-    const legend = el("div",{class:"x-legend", style:"gap:10px;margin-bottom:20px;"});
-    c.findings.slice(0,maxItems).forEach((f,idx)=>{
-      const color = typeColorHex(f.type);
-      legend.appendChild(el("div",{class:"x-leg-item", style:"gap:12px;"},[
-        el("div",{class:"x-leg-num", style:`width:30px;height:30px;font-size:14px;background:${color};`},[document.createTextNode(String(idx+1))]),
-        el("div",{class:"x-leg-body"},[
-          el("div",{class:"x-leg-title", style:"font-size:15px;margin-bottom:2px;"},[document.createTextNode(f.title||"—")]),
-          el("div",{class:"x-leg-desc", style:"font-size:13.5px;"},[document.createTextNode((f.desc||"").slice(0,descLen))])
-        ])
-      ]));
-    });
-    
+  imgWrap.appendChi
 Preview truncated for large file
