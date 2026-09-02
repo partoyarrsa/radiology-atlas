@@ -153,25 +153,15 @@ body::before{
 .sec-card .sec-body.empty{color:var(--muted);font-style:normal;}
 
 
-
 .img-stage{
   border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:16px;
 }
-.stage-row{display:grid;grid-template-columns:1fr 1fr;}
-.stage-row.single{grid-template-columns:1fr;}
-@media (max-width:760px){.stage-row{grid-template-columns:1fr;}}
-.img-panel{display:flex;flex-direction:column;min-width:0;}
-.img-panel + .img-panel{border-inline-start:1px solid var(--line);}
-@media (max-width:760px){.img-panel + .img-panel{border-inline-start:none;border-top:1px solid var(--line);}}
-.panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 14px;background:var(--panel-2);border-bottom:1px solid var(--line);}
-.panel-label{font-size:12px;color:var(--muted);font-weight:700;display:flex;align-items:center;gap:6px;}
-.panel-label .dot{width:7px;height:7px;border-radius:50%;background:var(--gold);flex:none;}
-.panel-label.is-normal .dot{background:var(--normal);}
-.fs-btn{font-size:13px;width:28px;height:28px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;flex:none;transition:.15s;}
+.img-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;background:var(--panel-2);border-bottom:1px solid var(--line);}
+.fs-btn{font-size:12.5px;padding:6px 14px;border-radius:20px;border:1px solid var(--line);background:transparent;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:6px;}
 .fs-btn:hover{border-color:var(--gold);color:var(--text,#eee);}
-.img-canvas{padding:16px;display:flex;align-items:center;justify-content:center;background:#000;flex:1;}
+.img-canvas{padding:16px;display:flex;align-items:center;justify-content:center;background:#000;}
 .img-wrap{position:relative;max-width:100%;line-height:0;}
-.img-wrap img{display:block;max-width:100%;max-height:58vh;width:100%;object-fit:contain;}
+.img-wrap img{display:block;max-width:100%;max-height:80vh;width:100%;object-fit:contain;}
 .img-wrap.empty{
   width:100%;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;
   color:var(--muted);font-size:13px;background:var(--panel-2);border-radius:8px;
@@ -185,10 +175,10 @@ body::before{
 .marker.active .ring{border-color:var(--gold-2);}
 @keyframes pulse{0%{transform:scale(.6);opacity:.9;}70%{transform:scale(1.9);opacity:0;}100%{opacity:0;}}
 
-.fs-overlay{position:fixed;inset:0;background:#000;z-index:100;display:flex;flex-direction:column;}
+.fs-overlay{position:fixed;inset:0;background:#000;z-index:100;display:flex;flex-direction:column;overflow-y:auto;-webkit-overflow-scrolling:touch;}
 .fs-overlay .fs-top{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;background:#0e0e12;border-bottom:1px solid var(--line);}
 .fs-overlay .fs-close{font-size:13px;padding:8px 16px;border-radius:20px;border:1px solid var(--line);background:transparent;color:var(--text,#eee);cursor:pointer;}
-.fs-overlay .img-canvas{flex:1;padding:24px;}
+.fs-overlay .img-canvas{padding:24px;}
 .fs-overlay .img-wrap img{max-height:88vh;}
 
 .dock-desc{margin:0;padding:16px 18px;background:var(--m-bg, var(--panel-2));border-top:1px solid var(--line);border-inline-start:4px solid var(--m-color, var(--gold-2));animation:ddIn .15s ease-out;}
@@ -201,6 +191,8 @@ body::before{
 .dock-desc .dd-desc{font-size:14px;line-height:1.8;color:var(--text,#eee);}
 @media (max-width:760px){.dock-desc{padding:13px 15px;} .dock-desc .dd-title{font-size:13.5px;} .dock-desc .dd-desc{font-size:13px;}}
 
+.findings-panel{display:none;}
+
 .findings-panel{border-inline-start:1px solid var(--line);padding:18px;display:flex;flex-direction:column;gap:10px;background:var(--bg-2);overflow-y:auto;max-height:60vh;}
 .findings-panel h4{margin:0;font-size:12px;color:var(--muted);font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.05em;}
 .finding-card{border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:11px 13px;cursor:pointer;transition:.15s;}
@@ -212,12 +204,30 @@ body::before{
 .finding-card .fdesc{font-size:12px;color:var(--muted);line-height:1.7;}
 .finding-card .fdesc.collapsed{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
 .finding-card .type-tag{font-size:10px;font-family:'IBM Plex Mono',monospace;color:var(--m-color);}
+.reveal-btn{margin-top:6px;}
 
-.other-findings{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:20px;}
-.other-findings .of-title{font-size:11px;color:var(--gold);font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;}
-.other-findings .of-note{font-size:11px;color:var(--muted);margin-bottom:10px;}
-.of-list{display:flex;flex-wrap:wrap;gap:8px;}
-.of-chip{font-size:12.5px;padding:6px 13px;border-radius:20px;background:var(--bg-2);border:1px solid var(--line);color:var(--text);}
+.compare-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;width:100%;}
+@media (max-width:640px){.compare-row{grid-template-columns:1fr;}}
+.compare-col{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#000;position:relative;transition:.15s;}
+.compare-col.patient{border-color:var(--line);}
+.compare-col.normal{border-color:#2c4f86;}
+.compare-col .lbl{
+  display:flex;align-items:center;gap:8px;background:var(--panel);padding:9px 13px;
+  font-size:12px;font-family:'IBM Plex Mono',monospace;letter-spacing:.02em;
+}
+.compare-col .lbl .dot{width:8px;height:8px;border-radius:50%;flex:none;box-shadow:0 0 8px currentColor;}
+.compare-col.patient .lbl{color:var(--patho);}
+.compare-col.patient .lbl .dot{background:var(--patho);color:var(--patho);}
+.compare-col.normal .lbl{color:var(--normal);}
+.compare-col.normal .lbl .dot{background:var(--normal);color:var(--normal);}
+.compare-col .lbl .lbl-sub{color:var(--muted);font-size:10.5px;margin-inline-start:auto;}
+.compare-col .img-wrap{position:relative;line-height:0;aspect-ratio:3/4;background:#000;display:flex;align-items:center;justify-content:center;}
+.compare-col .img-wrap img{width:100%;height:100%;object-fit:contain;display:block;}
+.compare-col .img-wrap.empty{color:var(--muted);font-size:12px;text-align:center;padding:16px;background:var(--panel-2);}
+@media (max-width:640px){.compare-col .img-wrap{aspect-ratio:4/3;}}
+.fs-overlay .compare-col .img-wrap{aspect-ratio:auto;height:auto;display:block;}
+.fs-overlay .compare-col .img-wrap img{width:100%;height:auto;max-height:60vh;object-fit:contain;}
+@media (max-width:760px){.fs-overlay .compare-col .img-wrap img{max-height:42vh;}}
 
 .source-line{font-size:11.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px;margin-top:8px;}
 .source-line b{color:var(--text);}
@@ -298,8 +308,11 @@ body::before{
 .xsheet .x-cat-pill{background:#ffcf4d;color:#1b1400;font-weight:800;border-radius:999px;font-family:'IBM Plex Mono',monospace;}
 .xsheet .x-title{font-weight:800;position:relative;z-index:1;}
 .xsheet .x-sub{color:#9fb2d4;font-family:'IBM Plex Mono',monospace;position:relative;z-index:1;}
-.xsheet .x-img-wrap{position:relative;border-radius:22px;overflow:hidden;background:#000;position:relative;z-index:1;box-shadow:0 30px 60px -20px #000a;}
-.xsheet .x-img-wrap img{display:block;width:100%;}
+.xsheet .x-img-wrap{position:relative;border-radius:24px;overflow:hidden;background:#000;position:relative;z-index:1;box-shadow:0 30px 70px -20px #000c;display:flex;align-items:center;justify-content:center;}
+.xsheet .x-img-bg{position:absolute;inset:-4%;width:108%;height:108%;object-fit:cover;filter:blur(38px) brightness(.45) saturate(1.15);transform:scale(1.05);}
+.xsheet .x-img-vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 45%,#0e2038cc 100%);}
+.xsheet .x-img-box{position:relative;border-radius:14px;overflow:hidden;box-shadow:0 20px 45px -12px #000a,0 0 0 1px #ffffff26;}
+.xsheet .x-img-box img{display:block;width:100%;height:100%;object-fit:contain;}
 .xsheet .x-marker{position:absolute;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;}
 .xsheet .x-marker .ring{position:absolute;inset:0;border-radius:50%;}
 .xsheet .x-marker .num{position:relative;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-weight:800;}
@@ -350,6 +363,7 @@ body::before{
   <div class="a-body">
     <aside class="a-sidebar">
       <button class="btn primary" id="newCaseBtn">+ مورد جدید</button>
+      <button class="btn small" id="exportJsonBtn">⬇ خروجی JSON (برای انتشار عمومی)</button>
       <div class="case-list" id="caseList"></div>
     </aside>
     <div class="a-main">
@@ -381,7 +395,7 @@ let state = {
   cases: [], activeId: null, screen:"student",
   admMode:"edit", activeFinding:null, placing:false,
   search:"", category:"all",
-  fsView:null
+  fullscreen:false
 };
 
 const el = (tag, attrs={}, children=[]) => {
@@ -430,6 +444,19 @@ function save(){
   try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state.cases)); }
   catch(e){ toast("ذخیره‌سازی با خطا مواجه شد"); }
 }
+function exportCasesJson(){
+  try{
+    const json = JSON.stringify(state.cases, null, 2);
+    const blob = new Blob([json], {type:"application/json"});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.download = "cases-export.json";
+    link.href = url;
+    link.click();
+    URL.revokeObjectURL(url);
+    toast("فایل JSON دانلود شد — این فایل رو برای دبیر رسانه بفرست تا داخل کد اصلی سایت ثبت بشه");
+  }catch(e){ toast("خروجی‌گیری ناموفق بود"); }
+}
 
 function seedData(){
   return [{
@@ -440,7 +467,6 @@ function seedData(){
     source: "تصویر بیمار: Mikael Häggström؛ تصویر طبیعی: Wikimedia Commons — هر دو با مجوز CC0 / Public Domain — الگوی تصویری منطبق بر منابع مرجع رادیولوژی (Radiopaedia, Brant & Helms)",
     imageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/X-ray_of_lobar_pneumonia.jpg",
     compareImageUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Chest_Xray_PA_3-8-2010.png",
-    otherFindings: "کاردیومگالی خفیف\nکایفوز خفیف ستون فقرات توراسیک",
     sections:{
       definition:"التهاب بافت پارانشیم ریه، معمولاً ناشی از عفونت باکتریایی، ویروسی یا قارچی که منجر به پر شدن فضاهای هوایی آلوئولی از ترشحات می‌شود. در نوع لوبار، کل یک لوب ریه به‌طور یکنواخت درگیر می‌شود.",
       causes:"شایع‌ترین علت باکتریایی: استرپتوکوک پنومونیه (پنوموکوک). علل دیگر: هموفیلوس آنفلوانزا، آسپیراسیون، ویروس‌ها، عفونت بیمارستانی و ضعف سیستم ایمنی.",
@@ -510,7 +536,7 @@ function renderStudentList(){
     const thumb = c.imageUrl
       ? el("div",{class:"thumb", style:`background-image:url('${c.imageUrl.replace(/'/g,"")}')`})
       : el("div",{class:"thumb empty"},[document.createTextNode("بدون تصویر")]);
-    const card = el("div",{class:"s-card"+(c.id===state.activeId?" active":""), onclick:()=>{state.activeId=c.id; state.activeFinding=null; state.fsView=null; render();}},[
+    const card = el("div",{class:"s-card"+(c.id===state.activeId?" active":""), onclick:()=>{state.activeId=c.id; state.activeFinding=null; render();}},[
       thumb,
       el("div",{class:"meta"},[
         el("div",{class:"cat"},[document.createTextNode("کیس "+caseNumber(c)+(c.category?" · "+c.category:""))]),
@@ -558,121 +584,112 @@ function renderStudentDetail(){
 
   detail.appendChild(buildStage(c));
 
-  const otherItems = (c.otherFindings||"").split("\n").map(s=>s.trim()).filter(Boolean);
-  if(otherItems.length){
-    const box = el("div",{class:"other-findings"});
-    box.appendChild(el("div",{class:"of-title"},[document.createTextNode("سایر یافته‌های قابل مشاهده در تصویر")]));
-    box.appendChild(el("div",{class:"of-note"},[document.createTextNode("این موارد خارج از موضوع اصلی این کیس هستند و فقط اشاره شده‌اند.")]));
-    const list = el("div",{class:"of-list"});
-    otherItems.forEach(t=> list.appendChild(el("span",{class:"of-chip"},[document.createTextNode(t)])));
-    box.appendChild(list);
-    detail.appendChild(box);
-  }
-
   if(c.source){
     detail.appendChild(el("div",{class:"source-line"},[document.createTextNode("منبع علمی: "), el("b",{},[document.createTextNode(c.source)])]));
   }
 
   box.appendChild(detail);
 }
-function buildImgPanel(label, srcUrl, viewKey, showMarkers, c, emptyText, extraContent){
-  const panel = el("div",{class:"img-panel"});
-  panel.appendChild(el("div",{class:"panel-head"},[
-    el("span",{class:"panel-label"+(viewKey==="normal"?" is-normal":"")},[el("span",{class:"dot"}), document.createTextNode(label)]),
-    srcUrl ? el("button",{class:"fs-btn", onclick:()=>{state.fsView=viewKey; render();}},[document.createTextNode("⤢")]) : null
-  ]));
-  const canvas = el("div",{class:"img-canvas"});
-  let imgWrap;
-  if(srcUrl){
-    imgWrap = el("div",{class:"img-wrap"});
-    const img = el("img",{src:srcUrl, alt:label});
-    imgWrap.appendChild(img);
-    if(showMarkers){
-      c.findings.forEach((f,idx)=> imgWrap.appendChild(buildStudentMarker(c,f,idx)));
-    }
-  } else {
-    imgWrap = el("div",{class:"img-wrap empty"},[document.createTextNode(emptyText)]);
-  }
-  canvas.appendChild(imgWrap);
-  panel.appendChild(canvas);
-  if(extraContent) panel.appendChild(extraContent);
-  return panel;
-}
 function buildStage(c){
   const stage = el("div",{class:"img-stage"});
   const hasCompare = !!c.compareImageUrl;
-  const row = el("div",{class:"stage-row"+(hasCompare?"":" single")});
 
+  const toolbar = el("div",{class:"img-toolbar"});
+  toolbar.appendChild(el("span",{style:"font-size:12px;color:var(--muted);"},[document.createTextNode(
+    hasCompare ? "🔍 مقایسهٔ تصویر بیمار و تصویر طبیعی" : "تصویر رادیولوژیک"
+  )]));
+  toolbar.appendChild(el("button",{class:"fs-btn", onclick:()=>{state.fullscreen=true; render();}},[document.createTextNode("⤢ نمایش تمام‌صفحه")]));
+  stage.appendChild(toolbar);
+
+  const canvas = el("div",{class:"img-canvas"});
   const activeF = c.findings.find(f=>f.id===state.activeFinding);
-  let patientExtra;
-  if(activeF){
-    patientExtra = el("div",{
+
+  function buildDockDesc(f){
+    return el("div",{
       class:"dock-desc",
-      style:`--m-color:${typeColorHex(activeF.type)}; --m-bg:${typeColorHex(activeF.type)}22;`
+      style:`--m-color:${typeColorHex(f.type)}; --m-bg:${typeColorHex(f.type)}22;`
     },[
       el("div",{class:"dd-top"},[
-        el("span",{class:"dd-title"},[document.createTextNode(activeF.title||"—")]),
-        el("span",{class:"dd-type"},[document.createTextNode(typeLabel(activeF.type))]),
+        el("span",{class:"dd-title"},[document.createTextNode(f.title||"—")]),
+        el("span",{class:"dd-type"},[document.createTextNode(typeLabel(f.type))]),
         el("button",{class:"dd-close", onclick:()=>{state.activeFinding=null; render();}},[document.createTextNode("✕")])
       ]),
-      el("div",{class:"dd-desc"},[document.createTextNode(activeF.desc||"")])
+      el("div",{class:"dd-desc"},[document.createTextNode(f.desc||"")])
     ]);
-  } else {
-    patientExtra = el("div",{class:"img-hint"},[document.createTextNode(
-      hasCompare ? "برای مشاهده توضیح علمی هر یافته روی نقاط طلایی تصویر بیمار ضربه بزنید. با ⤢ هر تصویر را بزرگ کنید."
-                 : "برای مشاهده توضیح علمی هر یافته، روی نقاط طلایی روی تصویر ضربه بزنید."
-    )]);
   }
 
-  row.appendChild(buildImgPanel("تصویر بیمار", c.imageUrl, "patient", true, c, "تصویری ثبت نشده است", patientExtra));
   if(hasCompare){
-    row.appendChild(buildImgPanel("تصویر طبیعی (مقایسه)", c.compareImageUrl, "normal", false, c, ""));
+    // نمایش هم‌زمان و کنار هم تصویر بیمار و تصویر طبیعی برای دسترسی و مقایسهٔ راحت‌تر
+    const row = el("div",{class:"compare-row"});
+    row.appendChild(buildCompareCol(c, "patient", c.imageUrl, "تصویر بیمار", "یافته‌ها فعال", activeF?buildDockDesc(activeF):null));
+    row.appendChild(buildCompareCol(c, "normal", c.compareImageUrl, "تصویر طبیعی", "برای مقایسه", null));
+    canvas.appendChild(row);
+    stage.appendChild(canvas);
+    if(!activeF){
+      stage.appendChild(el("div",{class:"img-hint"},[document.createTextNode(
+        "روی نقاط طلایی روی تصویر بیمار ضربه بزنید تا توضیح علمی هر یافته را دقیقاً زیر همان تصویر ببینید — تصویر طبیعی صرفاً برای مقایسه در کنار آن نمایش داده شده است."
+      )]));
+    }
+  } else {
+    let imgWrap;
+    if(c.imageUrl){
+      imgWrap = el("div",{class:"img-wrap"});
+      imgWrap.appendChild(el("img",{src:c.imageUrl, alt:c.title}));
+      c.findings.forEach((f,idx)=> imgWrap.appendChild(buildStudentMarker(c,f,idx)));
+    } else {
+      imgWrap = el("div",{class:"img-wrap empty"},[document.createTextNode("تصویری ثبت نشده است")]);
+    }
+    canvas.appendChild(imgWrap);
+    stage.appendChild(canvas);
+    if(activeF){
+      stage.appendChild(buildDockDesc(activeF));
+    } else {
+      stage.appendChild(el("div",{class:"img-hint"},[document.createTextNode(
+        "برای مشاهده توضیح علمی هر یافته، روی نقاط طلایی روی تصویر ضربه بزنید."
+      )]));
+    }
   }
-  stage.appendChild(row);
   return stage;
+}
+function buildCompareCol(c, kind, srcUrl, label, subLabel, footer){
+  const col = el("div",{class:"compare-col "+kind});
+  col.appendChild(el("div",{class:"lbl"},[
+    el("span",{class:"dot"}),
+    el("span",{},[document.createTextNode(label)]),
+    el("span",{class:"lbl-sub"},[document.createTextNode(subLabel)])
+  ]));
+  let imgWrap;
+  if(srcUrl){
+    imgWrap = el("div",{class:"img-wrap"});
+    imgWrap.appendChild(el("img",{src:srcUrl, alt:label}));
+    if(kind==="patient"){
+      c.findings.forEach((f,idx)=> imgWrap.appendChild(buildStudentMarker(c,f,idx)));
+    }
+  } else {
+    imgWrap = el("div",{class:"img-wrap empty"},[document.createTextNode(
+      kind==="patient" ? "تصویری ثبت نشده است" : "تصویر طبیعی برای این مورد ثبت نشده است"
+    )]);
+  }
+  col.appendChild(imgWrap);
+  if(footer) col.appendChild(footer);
+  return col;
 }
 function renderFullscreen(){
   let overlay = document.getElementById("fsOverlay");
-  if(!state.fsView || state.screen!=="student"){ if(overlay) overlay.remove(); return; }
+  if(!state.fullscreen || state.screen!=="student"){ if(overlay) overlay.remove(); return; }
   const c = activeCase();
-  if(!c){ state.fsView=null; return; }
-  const isPatient = state.fsView==="patient";
-  const srcUrl = isPatient ? c.imageUrl : c.compareImageUrl;
-  if(!srcUrl){ state.fsView=null; return; }
+  if(!c){ state.fullscreen=false; return; }
   if(!overlay){
     overlay = el("div",{id:"fsOverlay", class:"fs-overlay"});
     document.body.appendChild(overlay);
   }
   overlay.innerHTML="";
   overlay.appendChild(el("div",{class:"fs-top"},[
-    el("div",{style:"font-size:13.5px;font-weight:700;"},[document.createTextNode(c.title+" — "+(isPatient?"تصویر بیمار":"تصویر طبیعی"))]),
-    el("button",{class:"fs-close", onclick:()=>{state.fsView=null; render();}},[document.createTextNode("بستن ✕")])
+    el("div",{style:"font-size:13.5px;font-weight:700;"},[document.createTextNode(c.title)]),
+    el("button",{class:"fs-close", onclick:()=>{state.fullscreen=false; render();}},[document.createTextNode("بستن ✕")])
   ]));
-  const canvas = el("div",{class:"img-canvas"});
-  const imgWrap = el("div",{class:"img-wrap"});
-  const img = el("img",{src:srcUrl, alt:c.title});
-  imgWrap.appendChild(img);
-  if(isPatient){
-    c.findings.forEach((f,idx)=> imgWrap.appendChild(buildStudentMarker(c,f,idx)));
-  }
-  canvas.appendChild(imgWrap);
-  overlay.appendChild(canvas);
-  if(isPatient){
-    const activeF = c.findings.find(f=>f.id===state.activeFinding);
-    if(activeF){
-      overlay.appendChild(el("div",{
-        class:"dock-desc",
-        style:`--m-color:${typeColorHex(activeF.type)}; --m-bg:${typeColorHex(activeF.type)}22;`
-      },[
-        el("div",{class:"dd-top"},[
-          el("span",{class:"dd-title"},[document.createTextNode(activeF.title||"—")]),
-          el("span",{class:"dd-type"},[document.createTextNode(typeLabel(activeF.type))]),
-          el("button",{class:"dd-close", onclick:()=>{state.activeFinding=null; render();}},[document.createTextNode("✕")])
-        ]),
-        el("div",{class:"dd-desc"},[document.createTextNode(activeF.desc||"")])
-      ]));
-    }
-  }
+  const stage = buildStage(c);
+  overlay.appendChild(stage);
 }
 function buildStudentMarker(c,f,idx){
   const isActive = state.activeFinding===f.id;
@@ -694,6 +711,7 @@ function renderAdminSidebar(){
   const list = document.getElementById("caseList");
   list.innerHTML="";
   document.getElementById("newCaseBtn").onclick = ()=>openCaseModal(null);
+  document.getElementById("exportJsonBtn").onclick = exportCasesJson;
   if(!state.cases.length){
     list.appendChild(el("div",{class:"hint-banner"},[document.createTextNode("هنوز موردی اضافه نشده.")]));
     return;
@@ -822,7 +840,6 @@ function openCaseModal(existing){
   const causeInput = el("textarea",{placeholder:"علل شایع..."}); causeInput.value = s.causes||"";
   const sympInput = el("textarea",{placeholder:"علائم بالینی..."}); sympInput.value = s.symptoms||"";
   const imgingInput = el("textarea",{placeholder:"اهمیت و نقش تصویربرداری در تشخیص..."}); imgingInput.value = s.imaging||"";
-  const otherInput = el("textarea",{placeholder:"هر خط یک مورد — مثلاً: کاردیومگالی خفیف\nکاتتر ورید مرکزی در وضعیت مناسب"}); otherInput.value = existing?(existing.otherFindings||""):"";
 
   const modal = el("div",{class:"modal"},[
     el("h3",{},[document.createTextNode(existing?"ویرایش مورد":"مورد جدید")]),
@@ -839,8 +856,6 @@ function openCaseModal(existing){
     el("div",{class:"field"},[el("label",{},[document.createTextNode("علل")]), causeInput]),
     el("div",{class:"field"},[el("label",{},[document.createTextNode("علائم")]), sympInput]),
     el("div",{class:"field"},[el("label",{},[document.createTextNode("اهمیت تصویربرداری")]), imgingInput]),
-    el("div",{class:"modal-sec-title"},[document.createTextNode("سایر یافته‌های تصویر (اختیاری)")]),
-    el("div",{class:"field"},[el("label",{},[document.createTextNode("یافته‌های جانبی — فقط اشاره کوتاه، بدون توضیح کامل، هر خط یک مورد")]), otherInput]),
     el("div",{class:"field"},[el("label",{},[document.createTextNode("منبع علمی (اختیاری)")]), srcInput]),
     el("div",{class:"modal-actions"},[
       el("button",{class:"btn ghost", onclick:closeModal},[document.createTextNode("انصراف")]),
@@ -850,7 +865,6 @@ function openCaseModal(existing){
         const payload = {
           title, category:catInput.value, difficulty:diffInput.value, subtitle:subInput.value.trim(),
           source:srcInput.value.trim(), imageUrl:imgInput.value.trim(), compareImageUrl:cmpInput.value.trim(),
-          otherFindings:otherInput.value.trim(),
           sections:{definition:defInput.value.trim(), causes:causeInput.value.trim(), symptoms:sympInput.value.trim(), imaging:imgingInput.value.trim()}
         };
         if(existing){ Object.assign(existing,payload); }
@@ -927,9 +941,7 @@ async function deleteCase(c){
 }
 
 /* ---------- export sheets (Instagram post / story) ---------- */
-async function toDataURL(url){
-  if(!url) return null;
-  if(url.startsWith("data:")) return url;
+async function fetchAsDataURL(url){
   try{
     const res = await fetch(url, {mode:"cors"});
     if(!res.ok) throw new Error("bad status");
@@ -941,6 +953,17 @@ async function toDataURL(url){
       reader.readAsDataURL(blob);
     });
   }catch(e){ return null; }
+}
+async function toDataURL(url){
+  if(!url) return null;
+  if(url.startsWith("data:")) return url;
+  const direct = await fetchAsDataURL(url);
+  if(direct) return direct;
+  // بسیاری از سرورهای تصویر مجوز CORS لازم برای ساخت خروجی را نمی‌دهند، هرچند خودِ تصویر
+  // به‌صورت عادی در سایت درست نمایش داده می‌شود. در این حالت از یک پروکسی تصویر عمومی
+  // برای دریافت نسخه‌ای با مجوز صحیح استفاده می‌کنیم تا خروجی همچنان ساخته شود.
+  const proxied = "https://images.weserv.nl/?url=" + encodeURIComponent(url.replace(/^https?:\/\//,""));
+  return await fetchAsDataURL(proxied);
 }
 async function downloadSheet(c, variant){
   if(typeof html2canvas === "undefined"){ toast("ابزار خروجی تصویر بارگذاری نشد؛ اتصال اینترنت را بررسی کنید"); return; }
@@ -973,23 +996,38 @@ async function downloadSheet(c, variant){
 
   const hasFindings = c.findings && c.findings.length>0;
   const imgH = variant==="story" ? (hasFindings?440:560) : (hasFindings?340:480);
+  const innerW = W - pad*2;
   const imgWrap = el("div",{class:"x-img-wrap", style:`height:${imgH}px;margin-bottom:22px;`});
   const safeImgSrc = await toDataURL(c.imageUrl);
   if(!safeImgSrc){
-    toast("بارگذاری تصویر برای خروجی ناموفق بود — اتصال اینترنت یا لینک تصویر را بررسی کنید");
+    toast("بارگذاری تصویر برای خروجی ناموفق بود — لینک تصویر این مورد را با یک لینک مستقیم از منبع دیگر (مثلاً ویکی‌مدیا) جایگزین کنید");
     return;
   }
-  const img = el("img",{src:safeImgSrc, style:`height:${imgH}px;width:100%;object-fit:cover;`});
-  imgWrap.appendChild(img);
-  await new Promise((resolve)=>{ if(img.complete && img.naturalWidth){resolve();} else {img.onload=resolve; img.onerror=resolve;} });
 
+  // بارگذاری تصویر برای خواندن ابعاد واقعی‌اش (تا هرگز بیش از اندازه واقعی بزرگ/کش نشه)
+  const probe = new Image();
+  probe.src = safeImgSrc;
+  await new Promise((resolve)=>{ if(probe.complete && probe.naturalWidth){resolve();} else {probe.onload=resolve; probe.onerror=resolve;} });
+  const natW = probe.naturalWidth || innerW, natH = probe.naturalHeight || imgH;
+
+  // مقیاس نمایش: فقط در صورتی کوچک می‌شود که از قاب بزرگ‌تر باشد — هیچ‌وقت بزرگ‌نمایی (بی‌کیفیت شدن) نداریم
+  const fitScale = Math.min(innerW/natW, imgH/natH, 1);
+  const dispW = Math.round(natW*fitScale), dispH = Math.round(natH*fitScale);
+
+  // زمینهٔ محو‌شده از همان تصویر، فقط برای پرکردن شیک فضای اطراف قاب اصلی
+  imgWrap.appendChild(el("img",{class:"x-img-bg", src:safeImgSrc}));
+  imgWrap.appendChild(el("div",{class:"x-img-vignette"}));
+
+  const imgBox = el("div",{class:"x-img-box", style:`width:${dispW}px;height:${dispH}px;`});
+  imgBox.appendChild(el("img",{src:safeImgSrc}));
   c.findings.forEach((f,idx)=>{
     const color = typeColorHex(f.type);
-    imgWrap.appendChild(el("div",{class:"x-marker", style:`left:${f.x}%; top:${f.y}%; width:40px; height:40px;`},[
+    imgBox.appendChild(el("div",{class:"x-marker", style:`left:${f.x}%; top:${f.y}%; width:40px; height:40px;`},[
       el("div",{class:"ring", style:`border:3px solid ${color};`}),
       el("div",{class:"num", style:`width:40px;height:40px;background:${color};color:#0e2038;font-size:17px;`},[document.createTextNode(String(idx+1))])
     ]));
   });
+  imgWrap.appendChild(imgBox);
   sheet.appendChild(imgWrap);
 
   if(hasFindings){
@@ -1054,4 +1092,4 @@ load();
 })();
 </script>
 </body>
-        </html>
+</html>
