@@ -6,7 +6,7 @@
 <title>اطلس تعاملی رادیولوژی</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
 :root{
   --bg:#0e2038;
@@ -191,13 +191,6 @@ body::before{
 .dock-desc .dd-desc{font-size:14px;line-height:1.8;color:var(--text,#eee);}
 @media (max-width:760px){.dock-desc{padding:13px 15px;} .dock-desc .dd-title{font-size:13.5px;} .dock-desc .dd-desc{font-size:13px;}}
 
-.other-findings{margin:0;padding:16px 18px;background:var(--panel-2);border-top:1px solid var(--line);border-inline-start:4px solid var(--gold);}
-.other-findings .of-title{font-size:13px;font-weight:700;color:var(--gold);margin-bottom:4px;}
-.other-findings .of-note{font-size:11.5px;color:var(--muted);line-height:1.7;margin-bottom:10px;}
-.other-findings .of-tags{display:flex;flex-wrap:wrap;gap:8px;}
-.other-findings .of-tag{font-size:12.5px;padding:6px 14px;border-radius:20px;background:var(--panel);border:1px solid var(--line);color:var(--text);}
-@media (max-width:760px){.other-findings{padding:13px 15px;} .other-findings .of-title{font-size:12px;} .other-findings .of-note{font-size:11px;}}
-
 .findings-panel{display:none;}
 
 .findings-panel{border-inline-start:1px solid var(--line);padding:18px;display:flex;flex-direction:column;gap:10px;background:var(--bg-2);overflow-y:auto;max-height:60vh;}
@@ -329,11 +322,6 @@ body::before{
 .xsheet .x-sec .x-sec-body{color:#dbe6f7;line-height:1.65;}
 .xsheet .x-legend{display:flex;flex-direction:column;position:relative;z-index:1;}
 .xsheet .x-leg-item{display:flex;align-items:flex-start;}
-.xsheet .x-other{background:#ffffff0d;border:1px solid #ffffff1a;border-radius:16px;position:relative;z-index:1;}
-.xsheet .x-other .x-other-title{color:#ffcf4d;font-weight:800;}
-.xsheet .x-other .x-other-note{color:#9fb2d4;}
-.xsheet .x-other .x-other-tags{display:flex;flex-wrap:wrap;}
-.xsheet .x-other .x-other-tag{background:#ffffff14;border:1px solid #ffffff26;color:#eef4fc;border-radius:20px;}
 .xsheet .x-leg-num{flex:0 0 auto;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-weight:800;color:#0e2038;}
 .xsheet .x-leg-body{flex:1;}
 .xsheet .x-leg-title{color:#ffcf4d;font-weight:700;}
@@ -443,20 +431,6 @@ function difficultyLabel(d){ const f=DIFFICULTIES.find(x=>x.v===d); return f? f.
 function difficultyColorHex(d){ return {beginner:"#49e0b3",intermediate:"#ffcf4d",advanced:"#ff8066"}[d] || "#49e0b3"; }
 function caseNumber(c){ const idx = state.cases.findIndex(x=>x.id===c.id); return String(idx+1).padStart(2,"0"); }
 
-function showFatalError(err){
-  try{
-    document.querySelectorAll(".fatal-error-box").forEach(n=>n.remove());
-    const box = document.createElement("div");
-    box.className = "fatal-error-box";
-    box.setAttribute("style","position:fixed;inset:12px;z-index:9999;background:#2a0e0e;border:1px solid #ff8066;border-radius:12px;padding:16px;color:#ffe3da;font-family:monospace;font-size:12.5px;line-height:1.7;overflow:auto;direction:ltr;text-align:left;");
-    const msg = (err && (err.stack || err.message)) ? (err.stack || err.message) : String(err);
-    box.textContent = "خطای اجرا — این متن رو کپی/عکس بگیر و بفرست:\n\n" + msg;
-    document.body.appendChild(box);
-  }catch(e2){ /* nothing more we can do */ }
-}
-window.addEventListener("error", (e)=>{ showFatalError(e.error || e.message); });
-window.addEventListener("unhandledrejection", (e)=>{ showFatalError(e.reason); });
-
 async function load(){
   try{
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -504,8 +478,7 @@ function seedData(){
       {id: uid(), x: 58, y: 38, title: "برونکوگرام هوایی", desc: "درون ناحیه کدر، مسیرهای هوادار برونش‌ها به‌صورت خطوط شاخه‌ای شفاف دیده می‌شوند — نشانه‌ای که کدورت از نوع آلوئولی (نه آتلکتازی) است.", type:"pathologic"},
       {id: uid(), x: 22, y: 40, title: "ریه چپ طبیعی", desc: "بافت ریه در سمت مقابل شفافیت طبیعی دارد و کدورتی دیده نمی‌شود — برای مقایسه با سمت درگیر مفید است.", type:"normal"},
       {id: uid(), x: 50, y: 68, title: "زاویه کوستوفرنیک", desc: "زاویه کوستوفرنیک در این نمونه شفاف است و افیوژن قابل توجهی همراه پنومونی دیده نمی‌شود.", type:"normal"}
-    ],
-    otherFindings: "سگمنت میانی درگیر است\nضخیم شدن غشای بینابینی\nبزرگی لنفنودها\nتغییر زاویه آئورت و قلب"
+    ]
   }];
 }
 function activeCase(){ return state.cases.find(c=>c.id===state.activeId) || null; }
@@ -676,18 +649,7 @@ function buildStage(c){
       )]));
     }
   }
-  const otherBox = buildOtherFindings(c);
-  if(otherBox) stage.appendChild(otherBox);
   return stage;
-}
-function buildOtherFindings(c){
-  const items = (c.otherFindings||"").split("\n").map(s=>s.trim()).filter(Boolean);
-  if(!items.length) return null;
-  return el("div",{class:"other-findings"},[
-    el("div",{class:"of-title"},[document.createTextNode("سایر یافته‌های قابل مقایسه در تصویر")]),
-    el("div",{class:"of-note"},[document.createTextNode("این موارد خارج از موضوع اصلی این کیس هستند و فقط اشاره شده‌اند.")]),
-    el("div",{class:"of-tags"}, items.map(t=> el("span",{class:"of-tag"},[document.createTextNode(t)])))
-  ]);
 }
 function buildCompareCol(c, kind, srcUrl, label, subLabel, footer){
   const col = el("div",{class:"compare-col "+kind});
@@ -878,7 +840,6 @@ function openCaseModal(existing){
   const causeInput = el("textarea",{placeholder:"علل شایع..."}); causeInput.value = s.causes||"";
   const sympInput = el("textarea",{placeholder:"علائم بالینی..."}); sympInput.value = s.symptoms||"";
   const imgingInput = el("textarea",{placeholder:"اهمیت و نقش تصویربرداری در تشخیص..."}); imgingInput.value = s.imaging||"";
-  const otherInput = el("textarea",{placeholder:"هر یافتهٔ فرعی در یک خط جداگانه... (مثلاً: بزرگی لنفنودها)"}); otherInput.value = existing?(existing.otherFindings||""):"";
 
   const modal = el("div",{class:"modal"},[
     el("h3",{},[document.createTextNode(existing?"ویرایش مورد":"مورد جدید")]),
@@ -895,8 +856,6 @@ function openCaseModal(existing){
     el("div",{class:"field"},[el("label",{},[document.createTextNode("علل")]), causeInput]),
     el("div",{class:"field"},[el("label",{},[document.createTextNode("علائم")]), sympInput]),
     el("div",{class:"field"},[el("label",{},[document.createTextNode("اهمیت تصویربرداری")]), imgingInput]),
-    el("div",{class:"modal-sec-title"},[document.createTextNode("سایر یافته‌های قابل مقایسه در تصویر (اختیاری)")]),
-    el("div",{class:"field"},[el("label",{},[document.createTextNode("یافته‌های فرعی — هر مورد در یک خط")]), otherInput]),
     el("div",{class:"field"},[el("label",{},[document.createTextNode("منبع علمی (اختیاری)")]), srcInput]),
     el("div",{class:"modal-actions"},[
       el("button",{class:"btn ghost", onclick:closeModal},[document.createTextNode("انصراف")]),
@@ -906,7 +865,6 @@ function openCaseModal(existing){
         const payload = {
           title, category:catInput.value, difficulty:diffInput.value, subtitle:subInput.value.trim(),
           source:srcInput.value.trim(), imageUrl:imgInput.value.trim(), compareImageUrl:cmpInput.value.trim(),
-          otherFindings:otherInput.value.trim(),
           sections:{definition:defInput.value.trim(), causes:causeInput.value.trim(), symptoms:sympInput.value.trim(), imaging:imgingInput.value.trim()}
         };
         if(existing){ Object.assign(existing,payload); }
@@ -1069,5 +1027,69 @@ async function downloadSheet(c, variant){
       el("div",{class:"num", style:`width:40px;height:40px;background:${color};color:#0e2038;font-size:17px;`},[document.createTextNode(String(idx+1))])
     ]));
   });
-  imgWrap.appendChi
-Preview truncated for large file
+  imgWrap.appendChild(imgBox);
+  sheet.appendChild(imgWrap);
+
+  if(hasFindings){
+    const maxItems = variant==="story" ? 5 : 3;
+    const descLen = variant==="story" ? 130 : 78;
+    const legend = el("div",{class:"x-legend", style:"gap:10px;margin-bottom:20px;"});
+    c.findings.slice(0,maxItems).forEach((f,idx)=>{
+      const color = typeColorHex(f.type);
+      legend.appendChild(el("div",{class:"x-leg-item", style:"gap:12px;"},[
+        el("div",{class:"x-leg-num", style:`width:30px;height:30px;font-size:14px;background:${color};`},[document.createTextNode(String(idx+1))]),
+        el("div",{class:"x-leg-body"},[
+          el("div",{class:"x-leg-title", style:"font-size:15px;margin-bottom:2px;"},[document.createTextNode(f.title||"—")]),
+          el("div",{class:"x-leg-desc", style:"font-size:13.5px;"},[document.createTextNode((f.desc||"").slice(0,descLen))])
+        ])
+      ]));
+    });
+    if(c.findings.length>maxItems){
+      legend.appendChild(el("div",{style:"font-size:12.5px;color:#8fa3c7;padding-inline-start:42px;"},[document.createTextNode(`+ ${c.findings.length-maxItems} یافته دیگر در نسخه آنلاین`)]));
+    }
+    sheet.appendChild(legend);
+  }
+
+  const secs = c.sections||{};
+  const secList = [["تعریف",secs.definition],["علل",secs.causes],["علائم",secs.symptoms],["اهمیت تصویربرداری",secs.imaging]].filter(([,b])=>b);
+  if(secList.length && !hasFindings){
+    const cols = variant==="story" ? 1 : 2;
+    const secGrid = el("div",{class:"x-sections", style:`grid-template-columns:repeat(${cols},1fr);gap:14px;margin-bottom:22px;`});
+    const maxLen = variant==="story" ? 150 : 100;
+    secList.forEach(([label,body])=>{
+      secGrid.appendChild(el("div",{class:"x-sec", style:"padding:16px 18px;"},[
+        el("div",{class:"x-sec-label", style:"font-size:14px;margin-bottom:6px;"},[document.createTextNode(label)]),
+        el("div",{class:"x-sec-body", style:"font-size:16px;"},[document.createTextNode((body||"").slice(0,maxLen))])
+      ]));
+    });
+    sheet.appendChild(secGrid);
+  }
+
+  sheet.appendChild(el("div",{class:"x-footer", style:"padding-top:18px;font-size:15px;"},[
+    el("span",{},[document.createTextNode("دانشگاه علوم پزشکی سبزوار")]),
+    el("span",{},[document.createTextNode(c.source ? ("منبع: "+c.source.slice(0,40)) : "اطلس آموزشی رادیولوژی")])
+  ]));
+
+  rig.appendChild(sheet);
+  document.body.appendChild(rig);
+
+  try{
+    if(document.fonts && document.fonts.ready) await document.fonts.ready;
+    const canvas = await html2canvas(sheet, {backgroundColor:"#0e2038", scale:1.6, useCORS:true, width:W, height:H});
+    const link = document.createElement("a");
+    link.download = (c.title||"case").replace(/\s+/g,"-") + "-" + variant + ".png";
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+    toast("خروجی آماده شد ✓");
+  }catch(err){
+    toast("ساخت خروجی ناموفق بود — لینک تصویر باید مجوز CORS داشته باشد");
+  }finally{
+    document.body.removeChild(rig);
+  }
+}
+
+load();
+})();
+</script>
+</body>
+  </html>
