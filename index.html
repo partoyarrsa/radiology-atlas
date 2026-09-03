@@ -318,20 +318,19 @@ body::before{
 .xsheet .x-img-vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 45%,#0e2038cc 100%);}
 .xsheet .x-img-box{position:relative;border-radius:14px;overflow:hidden;box-shadow:0 20px 45px -12px #000a,0 0 0 1px #ffffff26;}
 .xsheet .x-img-box img{display:block;width:100%;height:100%;object-fit:contain;}
-.xsheet .x-marker{position:absolute;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;}
-.xsheet .x-marker .ring{position:absolute;inset:0;border-radius:50%;}
-.xsheet .x-marker .num{position:relative;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-weight:800;}
+.xsheet .x-marker{position:absolute;transform:translate(-50%,-50%);}
+.xsheet .x-marker .dot{border-radius:50%;}
 .xsheet .x-sections{display:grid;position:relative;z-index:1;}
 .xsheet .x-sec{background:#ffffff0d;border:1px solid #ffffff1a;border-radius:16px;}
 .xsheet .x-sec .x-sec-label{color:#ffcf4d;font-family:'IBM Plex Mono',monospace;font-weight:700;text-transform:uppercase;}
 .xsheet .x-sec .x-sec-body{color:#dbe6f7;line-height:1.65;}
 .xsheet .x-legend{display:flex;flex-direction:column;position:relative;z-index:1;}
 .xsheet .x-leg-item{display:flex;align-items:flex-start;}
-.xsheet .x-leg-num{flex:0 0 auto;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-weight:800;color:#0e2038;}
+.xsheet .x-leg-dot{flex:0 0 auto;border-radius:50%;margin-top:5px;}
 .xsheet .x-leg-body{flex:1;}
 .xsheet .x-leg-title{color:#ffcf4d;font-weight:700;}
 .xsheet .x-leg-desc{color:#c7d4ea;line-height:1.6;}
-.xsheet .x-footer{margin-top:auto;position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center;border-top:1px solid #ffffff22;color:#9fb2d4;font-family:'IBM Plex Mono',monospace;}
+.xsheet .x-footer{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center;color:#9fb2d4;font-family:'IBM Plex Mono',monospace;}
 </style>
 </head>
 <body>
@@ -426,6 +425,8 @@ function toast(msg){
 function typeColor(type){ return type==="normal" ? "var(--normal)" : "var(--patho)"; }
 function typeColorHex(type){ return type==="normal" ? "#49e0b3" : "#ff8066"; }
 function typeLabel(type){ return type==="normal" ? "طبیعی" : "پاتولوژیک"; }
+const MARKER_COLORS = ["#ff5c7a","#3ec7ff","#ffcf4d","#7ee787","#c792ea","#ff9f43","#4dd0e1","#ff8fd0"];
+function markerColorForIndex(idx){ return MARKER_COLORS[idx % MARKER_COLORS.length]; }
 
 /* Anatomic categories — based on standard radiology subspecialty divisions
    (Chest/Thoracic, Abdominal, MSK, Neuro, Head&Neck, Cardiovascular, Breast,
@@ -1013,6 +1014,36 @@ async function toDataURL(url){
   const proxied = "https://images.weserv.nl/?url=" + encodeURIComponent(url.replace(/^https?:\/\//,""));
   return await fetchAsDataURL(proxied);
 }
+async function buildXImgCol(src, colW, colH, findings, labelText, labelColorHex){
+  const probe = new Image();
+  probe.src = src;
+  await new Promise((resolve)=>{ if(probe.complete && probe.naturalWidth){resolve();} else {probe.onload=resolve; probe.onerror=resolve;} });
+  const natW = probe.naturalWidth || colW, natH = probe.naturalHeight || colH;
+  const fitScale = Math.min(colW/natW, colH/natH, 1);
+  const dispW = Math.round(natW*fitScale), dispH = Math.round(natH*fitScale);
+
+  const col = el("div",{class:"x-img-wrap", style:`direction:ltr;width:${colW}px;height:${colH}px;`});
+  col.appendChild(el("img",{class:"x-img-bg", src}));
+  col.appendChild(el("div",{class:"x-img-vignette"}));
+  const box = el("div",{class:"x-img-box", style:`width:${dispW}px;height:${dispH}px;`});
+  box.appendChild(el("img",{src}));
+  if(findings){
+    findings.forEach((f,idx)=>{
+      const color = markerColorForIndex(idx);
+      box.appendChild(el("div",{class:"x-marker", style:`left:${f.x}%; top:${f.y}%;`},[
+        el("div",{class:"dot", style:`width:14px;height:14px;background:${color};box-shadow:0 0 0 3px #0e2038,0 0 10px 2px ${color}bb;`})
+      ]));
+    });
+  }
+  col.appendChild(box);
+  if(labelText){
+    col.appendChild(el("div",{style:`position:absolute;top:12px;left:12px;z-index:2;background:#0e2038cc;border:1px solid #ffffff26;border-radius:20px;padding:6px 14px;font-size:12.5px;font-family:'IBM Plex Mono',monospace;color:${labelColorHex};display:flex;align-items:center;gap:7px;`},[
+      el("span",{style:`width:7px;height:7px;border-radius:50%;background:${labelColorHex};flex:none;box-shadow:0 0 8px ${labelColorHex}aa;`}),
+      document.createTextNode(labelText)
+    ]));
+  }
+  return col;
+}
 async function downloadSheet(c, variant){
   if(typeof html2canvas === "undefined"){ toast("ابزار خروجی تصویر بارگذاری نشد؛ اتصال اینترنت را بررسی کنید"); return; }
   if(!c.imageUrl){ toast("ابتدا یک تصویر برای این مورد ثبت کنید"); return; }
@@ -1043,49 +1074,37 @@ async function downloadSheet(c, variant){
   else sheet.appendChild(el("div",{style:"height:20px;"}));
 
   const hasFindings = c.findings && c.findings.length>0;
+  const hasCompare = !!c.compareImageUrl;
   const imgH = variant==="story" ? (hasFindings?440:560) : (hasFindings?340:480);
   const innerW = W - pad*2;
-  const imgWrap = el("div",{class:"x-img-wrap", style:`height:${imgH}px;margin-bottom:22px;`});
   const safeImgSrc = await toDataURL(c.imageUrl);
   if(!safeImgSrc){
     toast("بارگذاری تصویر برای خروجی ناموفق بود — لینک تصویر این مورد را با یک لینک مستقیم از منبع دیگر (مثلاً ویکی‌مدیا) جایگزین کنید");
     return;
   }
+  const compareSrc = hasCompare ? await toDataURL(c.compareImageUrl) : null;
 
-  // بارگذاری تصویر برای خواندن ابعاد واقعی‌اش (تا هرگز بیش از اندازه واقعی بزرگ/کش نشه)
-  const probe = new Image();
-  probe.src = safeImgSrc;
-  await new Promise((resolve)=>{ if(probe.complete && probe.naturalWidth){resolve();} else {probe.onload=resolve; probe.onerror=resolve;} });
-  const natW = probe.naturalWidth || innerW, natH = probe.naturalHeight || imgH;
-
-  // مقیاس نمایش: فقط در صورتی کوچک می‌شود که از قاب بزرگ‌تر باشد — هیچ‌وقت بزرگ‌نمایی (بی‌کیفیت شدن) نداریم
-  const fitScale = Math.min(innerW/natW, imgH/natH, 1);
-  const dispW = Math.round(natW*fitScale), dispH = Math.round(natH*fitScale);
-
-  // زمینهٔ محو‌شده از همان تصویر، فقط برای پرکردن شیک فضای اطراف قاب اصلی
-  imgWrap.appendChild(el("img",{class:"x-img-bg", src:safeImgSrc}));
-  imgWrap.appendChild(el("div",{class:"x-img-vignette"}));
-
-  const imgBox = el("div",{class:"x-img-box", style:`width:${dispW}px;height:${dispH}px;`});
-  imgBox.appendChild(el("img",{src:safeImgSrc}));
-  c.findings.forEach((f,idx)=>{
-    const color = typeColorHex(f.type);
-    imgBox.appendChild(el("div",{class:"x-marker", style:`left:${f.x}%; top:${f.y}%; width:40px; height:40px;`},[
-      el("div",{class:"ring", style:`border:3px solid ${color};`}),
-      el("div",{class:"num", style:`width:40px;height:40px;background:${color};color:#0e2038;font-size:17px;`},[document.createTextNode(String(idx+1))])
-    ]));
-  });
-  imgWrap.appendChild(imgBox);
-  sheet.appendChild(imgWrap);
+  if(compareSrc){
+    const gap = 18;
+    const colW = Math.floor((innerW-gap)/2);
+    const row = el("div",{style:`display:flex;direction:ltr;gap:${gap}px;margin-bottom:22px;`});
+    row.appendChild(await buildXImgCol(safeImgSrc, colW, imgH, c.findings, "تصویر بیمار", "#ff8066"));
+    row.appendChild(await buildXImgCol(compareSrc, colW, imgH, null, "تصویر طبیعی", "#49e0b3"));
+    sheet.appendChild(row);
+  } else {
+    const col = await buildXImgCol(safeImgSrc, innerW, imgH, c.findings, null, null);
+    col.style.marginBottom = "22px";
+    sheet.appendChild(col);
+  }
 
   if(hasFindings){
     const maxItems = variant==="story" ? 5 : 3;
     const descLen = variant==="story" ? 130 : 78;
     const legend = el("div",{class:"x-legend", style:"gap:10px;margin-bottom:20px;"});
     c.findings.slice(0,maxItems).forEach((f,idx)=>{
-      const color = typeColorHex(f.type);
+      const color = markerColorForIndex(idx);
       legend.appendChild(el("div",{class:"x-leg-item", style:"gap:12px;"},[
-        el("div",{class:"x-leg-num", style:`width:30px;height:30px;font-size:14px;background:${color};`},[document.createTextNode(String(idx+1))]),
+        el("div",{class:"x-leg-dot", style:`width:16px;height:16px;background:${color};box-shadow:0 0 8px ${color}aa;`}),
         el("div",{class:"x-leg-body"},[
           el("div",{class:"x-leg-title", style:"font-size:15px;margin-bottom:2px;"},[document.createTextNode(f.title||"—")]),
           el("div",{class:"x-leg-desc", style:"font-size:13.5px;"},[document.createTextNode((f.desc||"").slice(0,descLen))])
@@ -1093,7 +1112,7 @@ async function downloadSheet(c, variant){
       ]));
     });
     if(c.findings.length>maxItems){
-      legend.appendChild(el("div",{style:"font-size:12.5px;color:#8fa3c7;padding-inline-start:42px;"},[document.createTextNode(`+ ${c.findings.length-maxItems} یافته دیگر در نسخه آنلاین`)]));
+      legend.appendChild(el("div",{style:"font-size:12.5px;color:#8fa3c7;padding-inline-start:28px;"},[document.createTextNode(`+ ${c.findings.length-maxItems} یافته دیگر در نسخه آنلاین`)]));
     }
     sheet.appendChild(legend);
   }
@@ -1113,10 +1132,17 @@ async function downloadSheet(c, variant){
     sheet.appendChild(secGrid);
   }
 
-  sheet.appendChild(el("div",{class:"x-footer", style:"padding-top:18px;font-size:15px;"},[
+  const bottomBlock = el("div",{style:"margin-top:auto;display:flex;flex-direction:column;gap:16px;position:relative;z-index:1;"});
+  bottomBlock.appendChild(el("div",{style:"display:flex;justify-content:center;"},[
+    el("div",{style:"background:linear-gradient(90deg,#ffcf4d29,#ffcf4d14);border:1px solid #ffcf4d55;border-radius:999px;padding:11px 26px;font-size:15px;color:#ffe08a;font-weight:700;text-align:center;"},[
+      document.createTextNode("📖 برای بررسی جزئی‌تر و کامل‌تر این کیس، وارد اطلس تعاملی رادیولوژی شوید")
+    ])
+  ]));
+  bottomBlock.appendChild(el("div",{class:"x-footer", style:`padding-top:16px;font-size:15px;border-top:1px solid #ffffff22;`},[
     el("span",{},[document.createTextNode("دانشگاه علوم پزشکی سبزوار")]),
     el("span",{},[document.createTextNode(c.source ? ("منبع: "+c.source.slice(0,40)) : "اطلس آموزشی رادیولوژی")])
   ]));
+  sheet.appendChild(bottomBlock);
 
   rig.appendChild(sheet);
   document.body.appendChild(rig);
@@ -1140,4 +1166,4 @@ load();
 })();
 </script>
 </body>
-  </html>
+      </html>
